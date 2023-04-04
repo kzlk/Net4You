@@ -1,7 +1,6 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 #include "qboxlayout.h"
-#include "qevent.h"
 #include "qframe.h"
 #include "qobject.h"
 #include "qwidget.h"
@@ -13,10 +12,7 @@ class Widgets :  public QWidget
 
 public:
 
-
-
     Widgets() = default;
-
     void top(QWidget* Form)
     {
         if (!Form->objectName().isEmpty())

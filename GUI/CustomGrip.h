@@ -8,12 +8,12 @@
 #include <QMouseEvent>
 #include "Widget.h"
 
-
 class CustomGrip : public QWidget
 {
 private:
      Widgets* wi = new Widgets();
      QPoint mousePos;
+     QPoint m_dragPos;
 public:
     CustomGrip(QWidget *parent, Qt::Edge position, bool disable_color = false)
         : QWidget(parent)
@@ -75,7 +75,7 @@ public:
                 parent->resize(parent->width(), height);
                 event->accept();
             };
-          //  wi->bottoms->mouseMoveEvent = resize_bottom;
+           // wi->bottoms->mouseMoveEvent = resize_bottom;
              wi->bottoms->installEventFilter(this);
           // QObject::connect(wi->bottoms, &QWidget::mouseMoveEvent, this, &resize_bottom);
             // ENABLE COLOR
@@ -171,8 +171,6 @@ public:
         geo.setHeight(height);
         this->parentWidget()->setGeometry(geo);
     }
-
-
 
     void mouseReleaseEvent(QMouseEvent *event) override
     {

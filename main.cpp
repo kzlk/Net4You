@@ -5,11 +5,12 @@
 
 int main(int argc, char *argv[])
 {
+    QByteArray envVarValue = "96";
+        qputenv("QT_FONT_DPI", envVarValue);
     QApplication a(argc, argv);
     MainWindow w;
 
-    QByteArray envVarValue = "96";
-        qputenv("QT_FONT_DPI", envVarValue);
+
 
 
     w.show();

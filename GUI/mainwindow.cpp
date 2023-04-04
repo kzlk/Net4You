@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-
-
+#include <QTimer>
+#include <qapplication.h>
 
 #include "ui_main.h"
 bool GLOBAL_STATE = false;
@@ -333,17 +333,14 @@ void MainWindow::setStatus(bool status)
   // START - GUI DEFINITIONS
   void MainWindow::uiDefinitions() {
       // Double-click on title bar to maximize/restore
-      ui->titleRightInfo->installEventFilter(this);
 
+        ui->titleRightInfo->installEventFilter(this);
       // Set window flags to create a custom title bar and enable moving and resizing the window
       if (settings.ENABLE_CUSTOM_TITLE_BAR) {
           setWindowFlags(Qt::FramelessWindowHint);
           setAttribute(Qt::WA_TranslucentBackground);
 
-          // Move window on left mouse button press
-          ui->titleRightInfo->installEventFilter(this);
 
-          // Create custom grips for resizing the window
           left_grip = new CustomGrip(this, Qt::LeftEdge, true);
           right_grip = new CustomGrip(this, Qt::RightEdge, true);
           top_grip = new CustomGrip(this, Qt::TopEdge, true);
@@ -427,7 +424,47 @@ void MainWindow::setStatus(bool status)
     bottom_grip->setGeometry(0, this->height() - 10, this->width(), 10);
   }
   }
+  bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+  {
 
+
+      if (obj == ui->titleRightInfo && event->type() == QEvent::MouseButtonDblClick) {
+              QTimer::singleShot(250, [this](){maximize_restore(); });
+              return true;
+          }
+
+
+      else if (obj == ui->titleRightInfo && event->type() == QEvent::MouseButtonPress) {
+          // Set drag position for move event
+          QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+          if (mouseEvent->button() == Qt::LeftButton) {
+              dragPos = mouseEvent->globalPos() - this->frameGeometry().topLeft();
+              event->accept();
+              return true;
+          }
+      }
+      else if (obj == ui->titleRightInfo && event->type() == QEvent::MouseMove) {
+          // Move window
+          QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+          if (mouseEvent->buttons() & Qt::LeftButton) {
+              QMainWindow::move((mouseEvent->globalPos() - dragPos).toPoint());
+              event->accept();
+          } else {
+              // Check if cursor is within draggable area and set cursor shape accordingly
+              if (draggableArea.contains(mapFromGlobal(QCursor::pos()))) {
+                  setCursor(Qt::SizeAllCursor);
+              } else {
+                  setCursor(Qt::ArrowCursor);
+              }
+          }
+      } else if (obj == ui->titleRightInfo && event->type() == QEvent::Leave) {
+          // Reset cursor shape to default when mouse leaves draggable area
+          setCursor(Qt::ArrowCursor);
+      }
+      return QObject::eventFilter(obj, event);
+
+
+  }
   // MOUSE CLICK EVENTS
   // ///////////////////////////////////////////////////////////////
   void MainWindow::mousePressEvent(QMouseEvent* event) {
@@ -441,3 +478,12 @@ void MainWindow::setStatus(bool status)
           qDebug() << "Mouse click: RIGHT CLICK";
       }
       }
+
+
+  void MainWindow::dobleClickMaximizeRestore(QMouseEvent *event) {
+      // IF DOUBLE CLICK CHANGE STATUS
+      if (event->type() == QEvent::MouseButtonDblClick) {
+          QTimer::singleShot(250, [this](){maximize_restore();});
+      }
+      event->accept();
+  }

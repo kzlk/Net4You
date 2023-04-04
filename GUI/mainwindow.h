@@ -7,6 +7,9 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QFile>
+#include <QPoint>
+#include <QWidget>
+#include <QMouseEvent>
 #include <QSizeGrip>
 #include "CustomGrip.h"
 QT_BEGIN_NAMESPACE
@@ -17,17 +20,19 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public slots:
+protected:
     void buttonClick();
-    void resizeEvent(QResizeEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-
+    void resizeEvent(QResizeEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
+ //    void mouseMoveEvent(QMouseEvent *event) override;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
      void maximize_restore();
  bool returnStatus();
+  void dobleClickMaximizeRestore(QMouseEvent *event);
   void setStatus(bool status);
  void toggleMenu(bool enable);
  void toggleLeftBox(bool enable);
@@ -41,6 +46,7 @@ public:
   void theme(QString file, bool useCustomTheme);
 void resizeGrips();
 private:
+    QRect draggableArea;
      Settings settings;
     Ui::MainWindow *ui;
     QGraphicsDropShadowEffect * shadow;

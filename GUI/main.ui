@@ -872,7 +872,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-home.png);</string>
                   </property>
                   <property name="text">
-                   <string>Home</string>
+                   <string>Wireless Adapter</string>
                   </property>
                  </widget>
                 </item>
@@ -908,7 +908,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-gamepad.png);</string>
                   </property>
                   <property name="text">
-                   <string>Widgets</string>
+                   <string>Graph</string>
                   </property>
                  </widget>
                 </item>
@@ -944,7 +944,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-file.png);</string>
                   </property>
                   <property name="text">
-                   <string>New</string>
+                   <string>Routes</string>
                   </property>
                  </widget>
                 </item>
@@ -980,7 +980,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-save.png)</string>
                   </property>
                   <property name="text">
-                   <string>Save</string>
+                   <string>Usage</string>
                   </property>
                  </widget>
                 </item>
@@ -1016,7 +1016,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-x.png);</string>
                   </property>
                   <property name="text">
-                   <string>Exit</string>
+                   <string>User Detection</string>
                   </property>
                  </widget>
                 </item>

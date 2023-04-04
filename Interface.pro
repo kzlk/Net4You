@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui printsupport sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,18 +9,17 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp
+   main.cpp \
+     GUI/mainwindow.cpp
 
 HEADERS += \
-    CustomGrip.h \
-    Settings.h \
-    Widget.h \
-    app_function.h \
-    mainwindow.h
+     GUI/CustomGrip.h \
+     GUI/Settings.h \
+     GUI/Widget.h \
+     GUI/mainwindow.h
 
 FORMS += \
-    main.ui
+     GUI/main.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
