@@ -3,7 +3,7 @@
 
 #include "qgraphicseffect.h"
 #include <QMainWindow>
-#include <Settings.h>
+#include "Settings.h"
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 #include <QFile>
@@ -12,6 +12,7 @@
 #include <QMouseEvent>
 #include <QSizeGrip>
 #include "CustomGrip.h"
+#include <QStandardItemModel>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -47,7 +48,7 @@ public:
 void resizeGrips();
 private:
     QRect draggableArea;
-     Settings settings;
+    Settings settings;
     Ui::MainWindow *ui;
     QGraphicsDropShadowEffect * shadow;
     CustomGrip*  left_grip;

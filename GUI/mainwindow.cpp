@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
      ::widgets = this->ui;
     //QWidget* w = new QWidget();
    // w->setStyleSheet("background-color: #6272a4;");
-   // ui->setSyleSheet()
+    //ui->setSyleSheet()
     ui->pushButton->setStyleSheet("background-color: #6272a4;");
     ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
     ui->tableWidget->setStyleSheet("QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { background: #6272a4; }");
@@ -70,8 +70,8 @@ MainWindow::MainWindow(QWidget *parent)
                             //  this->show();
 
                               // SET CUSTOM THEME
-                              bool useCustomTheme = true;
-                              QString themeFile = "E:/Developer_Project/C++/QT/Interface/themes/py_dracula_light.qss";
+                              bool useCustomTheme = false;
+                              QString themeFile = "E:/Developer_Project/C++/QT/KURSOVA_SPZ/themes/py_dracula_dark.qss";
 
                               // SET THEME AND HACKS
                               if (useCustomTheme) {
@@ -100,6 +100,67 @@ MainWindow::MainWindow(QWidget *parent)
                               // SET HOME PAGE AND SELECT MENU
                               widgets->stackedWidget->setCurrentWidget(widgets->home);
                               widgets->btn_home->setStyleSheet( MainWindow::selectMenu(widgets->btn_home->styleSheet()));
+
+//                              QStandardItemModel* item = new QStandardItemModel(20,20, this);
+
+
+
+//                              ui->tableView_interfaces->setModel(item);
+
+
+//                              QModelIndex index{};
+//                              for(int i = 0; i < 10; i++)
+//                              {
+//                                  for(int j = 0; j < 10; j++)
+//                                  {
+//                                      index = item->index(i, j );
+//                                      item->setData(index, 2);
+//                                  }
+//                              }
+
+//                              ui->tableView_interfaces->verticalHeader()->hide();
+
+                              // Create a QStandardItemModel to hold the data
+                              QStandardItemModel* model = new QStandardItemModel();
+
+                              // Set the header data for the model
+                              model->setHorizontalHeaderLabels({"Field", "Value"});
+
+                              // Create the top-level item for "Network Adapter Properties"
+                              QList<QStandardItem*> topLevelItems;
+                              QStandardItem* networkAdapterPropertiesItem = new QStandardItem("Network Adapter Properties");
+                              topLevelItems.append(networkAdapterPropertiesItem);
+
+                              // Create child items for "Network Adapter Properties"
+                              QList<QStandardItem*> networkAdapterItems;
+                              networkAdapterItems.append(new QStandardItem("Network Adapter"));
+                              networkAdapterItems.append(new QStandardItem("Realtek RTL8822CE 802.1 lac PCIe Adapter"));
+                              networkAdapterPropertiesItem->appendRow(networkAdapterItems);
+
+                              QList<QStandardItem*> interfaceTypeItems;
+                              interfaceTypeItems.append(new QStandardItem(QIcon(":/icons/images/icons/cil-save.png"), "Interface Type"));
+                              interfaceTypeItems.append(new QStandardItem("802.11 Wireless Ethernet"));
+                              networkAdapterPropertiesItem->appendRow(interfaceTypeItems);
+
+                              QList<QStandardItem*> hardwareAddressItems;
+                              hardwareAddressItems.append(new QStandardItem("Hardware Address"));
+                              hardwareAddressItems.append(new QStandardItem("5C-3A-45-92-F6-2B"));
+                              networkAdapterPropertiesItem->appendRow(hardwareAddressItems);
+
+                              QList<QStandardItem*> connectionNameItems;
+                              connectionNameItems.append(new QStandardItem("Connection Name"));
+                              connectionNameItems.append(new QStandardItem("Wi-Fi"));
+                              networkAdapterPropertiesItem->appendRow(connectionNameItems);
+
+                              QList<QStandardItem*> connectionSpeedItems;
+                              connectionSpeedItems.append(new QStandardItem("Connection Speed"));
+                              connectionSpeedItems.append(new QStandardItem("300 Mbps"));
+                              networkAdapterPropertiesItem->appendRow(connectionSpeedItems);
+
+                              model->appendRow(networkAdapterPropertiesItem);
+
+                               ui->treeView_interfaces->setModel(model);
+                               ui->treeView_interfaces->expandAll();
 
 }
 
@@ -327,7 +388,7 @@ void MainWindow::setStatus(bool status)
           QFile styleFile(file);
           styleFile.open(QFile::ReadOnly);
           QString style = QString::fromLatin1(styleFile.readAll());
-          qApp->setStyleSheet(style);
+          ui->styleSheet->setStyleSheet(style);
       }
   }
   // START - GUI DEFINITIONS
