@@ -7,7 +7,8 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+LIBS += -lWs2_32
+LIBS += -lIphlpapi
 TARGET = netspeed
 TEMPLATE = app
 

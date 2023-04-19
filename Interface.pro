@@ -1,16 +1,17 @@
-QT       += core gui printsupport sql network
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 LIBS += -lIphlpapi
-LIBS += -lWs2_32
-
+LIBS += -lws2_32
+LIBS += -lwlanapi
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
    main.cpp \
      GUI/mainwindow.cpp
@@ -20,6 +21,7 @@ HEADERS += \
      GUI/Settings.h \
      GUI/Widget.h \
      GUI/mainwindow.h \
+     Network/cmaincontrolblock.h \
      Network/cnetworkadapter.h
 
 FORMS += \

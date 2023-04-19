@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <QLabel>
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -36,6 +36,8 @@ private:
     unsigned    __int64         outBytes;
     unsigned    __int64         preInBytes;
     unsigned    __int64         preOutBytes;
+    QLabel* downSpeed;
+    QLabel* upSpeed;
 };
 
 #endif // MAINWINDOW_H
