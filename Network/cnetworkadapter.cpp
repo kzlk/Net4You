@@ -4,6 +4,7 @@ CNetworkAdapter::CNetworkAdapter()
 {
     if (!updateDeviceList())
         throw std::bad_alloc();
+    cachedAddresses_.setMaxCost(10);
 }
 
 bool CNetworkAdapter::updateDeviceList()
@@ -42,6 +43,25 @@ bool CNetworkAdapter::updateDeviceList()
     return dwRetVal == NO_ERROR;
 }
 
+QMap<int, QString> CNetworkAdapter::getListKeyValueInterface()
+{
+    pCurrAddresses = pAddresses;
+    while (pCurrAddresses)
+    {
+        if (pCurrAddresses->IfType == IF_TYPE_SOFTWARE_LOOPBACK)
+        {
+            pCurrAddresses = pCurrAddresses->Next;
+            continue;
+        }
+        else
+        {
+            allInterfaceKeyValue.insert(pCurrAddresses->IfIndex, QString::fromStdWString(pCurrAddresses->Description));
+            pCurrAddresses = pCurrAddresses->Next;
+        }
+    }
+    return allInterfaceKeyValue;
+}
+
 QStringList CNetworkAdapter::getListOfInterface()
 {
     pCurrAddresses = pAddresses;
@@ -61,19 +81,122 @@ QStringList CNetworkAdapter::getListOfInterface()
     return allInterfaceList;
 }
 
-CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int index)
+CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int indexAdapter)
 {
+    getAdapterByIndex(pCurrAddresses, indexAdapter);
+
+    if (pCurrAddresses != nullptr)
+    {
+        adapterProperties.networkAdapter = QString::fromStdWString(pCurrAddresses->Description);
+        adapterProperties.interfaceType = getAdapterType(pCurrAddresses);
+        adapterProperties.hardwareAddress = getHardwareAddress(pCurrAddresses);
+        adapterProperties.connectionName = QString::fromStdWString(pCurrAddresses->FriendlyName);
+        adapterProperties.connectionSpeed = (pCurrAddresses->TransmitLinkSpeed);
+        adapterProperties.MTU = pCurrAddresses->Mtu;
+    }
+
+    return adapterProperties;
 }
 
-QString CNetworkAdapter::getAdapterType(PIP_ADAPTER_INFO &index)
+CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddreses(int indexAdapter)
 {
-    switch (index->Type)
+    getAdapterByIndex(pCurrAddresses, indexAdapter);
+    if (pCurrAddresses != nullptr)
+    {
+        char ipAddressStr[INET_ADDRSTRLEN]{};
+        sockaddr_in *address{};
+
+        if (pCurrAddresses->Ipv4Enabled)
+        {
+            // retrive ip adress
+            pUnicast = pCurrAddresses->FirstUnicastAddress;
+            if (pUnicast != nullptr)
+            {
+                while (pUnicast)
+                {
+                    // Check if this address is an IPv4 address
+                    if (pUnicast->Address.lpSockaddr->sa_family != AF_INET)
+                    {
+                        pUnicast = pUnicast->Next;
+                        continue;
+                    }
+                    address = (struct sockaddr_in *)pUnicast->Address.lpSockaddr;
+                    inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+                    adapterAddreses.IPAddr = QString::fromLocal8Bit(ipAddressStr);
+                    break;
+                }
+            };
+
+            // retrive subnet mask
+            ULONG out{};
+            ConvertLengthToIpv4Mask(pUnicast->OnLinkPrefixLength, &out);
+            in_addr in{};
+            in.S_un.S_addr = out;
+            inet_ntop(AF_INET, &in, ipAddressStr, INET_ADDRSTRLEN);
+            adapterAddreses.subnetMask = QString::fromLocal8Bit(ipAddressStr);
+        }
+
+        // retrive gateway
+        if (pCurrAddresses->FirstGatewayAddress != nullptr)
+        {
+            address = (struct sockaddr_in *)pCurrAddresses->FirstGatewayAddress->Address.lpSockaddr;
+            inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+            adapterAddreses.gatewayAddr = QString::fromLocal8Bit(ipAddressStr);
+        }
+
+        // retrive DHCP
+        if (pCurrAddresses->Dhcpv4Enabled)
+        {
+            isDHCPEnabled = true;
+            address = (struct sockaddr_in *)pCurrAddresses->Dhcpv4Server.lpSockaddr;
+            inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+            adapterAddreses.DHCPAddr = QString::fromLocal8Bit(ipAddressStr);
+
+            // Retrieve the DHCP lease obtained and expires time
+            adapterAddreses.DHCPLeaseExpires = QDateTime::currentDateTime().addSecs(pUnicast->ValidLifetime);
+            adapterAddreses.DHCPLeaseObtained = adapterAddreses.DHCPLeaseExpires.addSecs(0 - (pUnicast->LeaseLifetime));
+        }
+
+        // retriveDNS
+        if (pCurrAddresses->DdnsEnabled)
+        {
+            if (pCurrAddresses->DnsSuffix != nullptr)
+                adapterAddreses.DNSSuffix = QString::fromWCharArray(pCurrAddresses->DnsSuffix);
+
+            address = (struct sockaddr_in *)pCurrAddresses->FirstDnsServerAddress->Address.lpSockaddr;
+            inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+            adapterAddreses.DNSServers = QString::fromLocal8Bit(ipAddressStr);
+        }
+    }
+
+    return adapterAddreses;
+}
+
+void CNetworkAdapter::getAdapterByIndex(PIP_ADAPTER_ADDRESSES &adapter, int &index)
+{
+    if (adapter->IfIndex != index)
+    {
+        adapter = pAddresses;
+        while (adapter)
+        {
+            if (adapter->IfIndex == index)
+            {
+                break;
+            }
+            adapter = adapter->Next;
+        }
+    }
+}
+
+QString CNetworkAdapter::getAdapterType(PIP_ADAPTER_ADDRESSES &index)
+{
+    switch (index->IfType)
     {
     case IF_TYPE_OTHER:
         return "Other";
         break;
     case IF_TYPE_ETHERNET_CSMACD:
-        if (strstr(index->Description, "Bluetooth") != NULL)
+        if (strstr(QString::fromStdWString(index->Description).toStdString().c_str(), ("bluetooth")) != NULL)
             return "Bluetooth Ethernet";
         return "Ethernet";
         break;
@@ -84,7 +207,7 @@ QString CNetworkAdapter::getAdapterType(PIP_ADAPTER_INFO &index)
         return "PPP";
         break;
     case IF_TYPE_SOFTWARE_LOOPBACK:
-        return ("Software Lookback");
+        return ("Software Loopback");
         break;
     case IF_TYPE_ATM:
         return ("ATM");
@@ -99,28 +222,35 @@ QString CNetworkAdapter::getAdapterType(PIP_ADAPTER_INFO &index)
         return ("IEEE 1394 Firewire");
         break;
     default:
-        return "Unknown type " + QString::number(index->Type);
+        return "Unknown type " + QString::number(index->IfType);
         break;
     }
 }
 
-QString CNetworkAdapter::getHardwareAddress(PIP_ADAPTER_INFO &index)
+QString CNetworkAdapter::getHardwareAddress(PIP_ADAPTER_ADDRESSES &index)
 {
-    if (index->AddressLength == 0)
+    if (index->PhysicalAddressLength == 0)
         return "";
 
     QString address{};
     char buffer[3]{};
 
-    for (int j = 0; j < (int)index->AddressLength; j++)
+    if (index->PhysicalAddressLength != 0)
     {
-        for (j = 0; j < (int)index->AddressLength; j++)
+        for (int j = 0; j < (int)index->PhysicalAddressLength; j++)
         {
-            if (j == ((int)index->AddressLength - 1))
-                sprintf(buffer, "%.2X\0", (int)index->Address[j]);
-            else
-                sprintf(buffer, "%.2X-", (int)index->Address[j]);
-            address.append(buffer);
+            for (j = 0; j < (int)index->PhysicalAddressLength; j++)
+            {
+                if (j == ((int)index->PhysicalAddressLength - 1))
+                    sprintf(buffer, "%.2X\0", (int)index->PhysicalAddress[j]);
+                else
+                    sprintf(buffer, "%.2X-", (int)index->PhysicalAddress[j]);
+                address.append(buffer);
+            }
         }
     }
+    return address;
 }
+
+// Initialize the cachedAddresses_
+QCache<quint16, PIP_ADAPTER_ADDRESSES> CNetworkAdapter::cachedAddresses_{};

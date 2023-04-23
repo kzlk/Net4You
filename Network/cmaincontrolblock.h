@@ -3,18 +3,16 @@
 #include "ui_main.h"
 #include <QMainWindow>
 #include <QObject>
-#include  "cnetworkadapter.h"
+#include "cnetworkadapter.h"
 class CMainControlBlock
 {
-public:
-    CMainControlBlock(Ui::MainWindow* main);
+  public:
+    CMainControlBlock(Ui::MainWindow *main);
 
-private:
+  private:
     void setupInterfaceInfo();
-    Ui::MainWindow* ui;
-   // CNetworkAdapter* adapter = new CNetworkAdapter();
-
-
+    Ui::MainWindow *ui;
+    CNetworkAdapter *adapter{};
 };
 
 #endif // CMAINCONTROLBLOCK_H
