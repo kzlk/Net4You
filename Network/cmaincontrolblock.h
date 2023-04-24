@@ -1,18 +1,25 @@
 #ifndef CMAINCONTROLBLOCK_H
 #define CMAINCONTROLBLOCK_H
-#include "ui_main.h"
-#include <QMainWindow>
 #include <QObject>
+#include <QMainWindow>
+#include "ui_main.h"
 #include "cnetworkadapter.h"
-class CMainControlBlock
+#include "qstandarditemmodel.h"
+
+class CMainControlBlock : public QWidget
 {
+    // Q_OBJECT
   public:
     CMainControlBlock(Ui::MainWindow *main);
 
   private:
-    void setupInterfaceInfo();
+    void setupComboBox();
+
     Ui::MainWindow *ui;
     CNetworkAdapter *adapter{};
+
+  public slots:
+    void setupInterfaceInfo(int index);
 };
 
 #endif // CMAINCONTROLBLOCK_H

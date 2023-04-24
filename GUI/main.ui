@@ -2047,12 +2047,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                        </item>
                        <item>
                         <widget class="QTreeView" name="treeView_interfaces">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
                          <property name="palette">
                           <palette>
                            <active>
@@ -2259,7 +2253,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                           <enum>Qt::ScrollBarAlwaysOn</enum>
                          </property>
                          <property name="sizeAdjustPolicy">
-                          <enum>QAbstractScrollArea::AdjustToContents</enum>
+                          <enum>QAbstractScrollArea::AdjustIgnored</enum>
                          </property>
                          <property name="editTriggers">
                           <set>QAbstractItemView::NoEditTriggers</set>
@@ -2648,7 +2642,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>255</width>
+                                 <width>222</width>
                                  <height>222</height>
                                 </rect>
                                </property>

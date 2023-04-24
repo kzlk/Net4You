@@ -83,17 +83,25 @@ QStringList CNetworkAdapter::getListOfInterface()
 
 CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int indexAdapter)
 {
+
     getAdapterByIndex(pCurrAddresses, indexAdapter);
 
     if (pCurrAddresses != nullptr)
     {
         adapterProperties.networkAdapter = QString::fromStdWString(pCurrAddresses->Description);
+        qDebug() << "adapterProperties.networkAdapter is " << adapterProperties.networkAdapter << '\n';
         adapterProperties.interfaceType = getAdapterType(pCurrAddresses);
+        qDebug() << " adapterProperties.interfaceType is " << adapterProperties.interfaceType << '\n';
         adapterProperties.hardwareAddress = getHardwareAddress(pCurrAddresses);
+        qDebug() << "adapterProperties.hardwareAddress is " << adapterProperties.hardwareAddress << '\n';
         adapterProperties.connectionName = QString::fromStdWString(pCurrAddresses->FriendlyName);
+        qDebug() << " adapterProperties.connectionName  is " << adapterProperties.connectionName << '\n';
         adapterProperties.connectionSpeed = (pCurrAddresses->TransmitLinkSpeed);
+        qDebug() << "adapterProperties.connectionSpeedis " << adapterProperties.connectionSpeed << '\n';
         adapterProperties.MTU = pCurrAddresses->Mtu;
     }
+    else
+        qDebug() << "pCurrAddresses is nullptr\n";
 
     return adapterProperties;
 }
@@ -174,17 +182,19 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
 
 void CNetworkAdapter::getAdapterByIndex(PIP_ADAPTER_ADDRESSES &adapter, int &index)
 {
-    if (adapter->IfIndex != index)
+    qDebug() << "Hello from getAdapterByIndex with index" << index << '\n';
+    if (adapter != nullptr && adapter->IfIndex == index)
+        return;
+
+    adapter = pAddresses;
+    while (adapter != nullptr)
     {
-        adapter = pAddresses;
-        while (adapter)
+        if (adapter->IfIndex == index)
         {
-            if (adapter->IfIndex == index)
-            {
-                break;
-            }
-            adapter = adapter->Next;
+            qDebug() << "adapter->IfIndex" << adapter->IfIndex << '\n';
+            return;
         }
+        adapter = adapter->Next;
     }
 }
 
@@ -233,7 +243,7 @@ QString CNetworkAdapter::getHardwareAddress(PIP_ADAPTER_ADDRESSES &index)
         return "";
 
     QString address{};
-    char buffer[3]{};
+    char buffer[6]{};
 
     if (index->PhysicalAddressLength != 0)
     {
