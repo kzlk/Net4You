@@ -14,8 +14,10 @@ class CMainControlBlock : public QWidget
 
   private:
     void setupComboBox();
+    QList<QStandardItem *> createStandardItemList(QString name, QString value, QIcon icon = QIcon());
 
     Ui::MainWindow *ui;
+    QStandardItemModel *model;
     CNetworkAdapter *adapter{};
 
   public slots:

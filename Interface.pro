@@ -13,6 +13,8 @@ LIBS += -lwlanapi
 SOURCES += \
     Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
+    Network/cnetworkadapterspeed.cpp \
+    Network/cwirelessnetworkadapter.cpp \
    main.cpp \
      GUI/mainwindow.cpp
 
@@ -22,7 +24,9 @@ HEADERS += \
      GUI/Widget.h \
      GUI/mainwindow.h \
      Network/cmaincontrolblock.h \
-     Network/cnetworkadapter.h
+     Network/cnetworkadapter.h \
+     Network/cnetworkadapterspeed.h \
+     Network/cwirelessnetworkadapter.h
 
 FORMS += \
      GUI/main.ui

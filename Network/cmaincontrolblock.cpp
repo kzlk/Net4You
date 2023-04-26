@@ -6,11 +6,19 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
     {
         adapter = new CNetworkAdapter();
         ui = qMain;
+
+        // Create a QStandardItemModel to hold the data
+        model = new QStandardItemModel();
+        // Set the header data for the model
+        model->setHorizontalHeaderLabels({"Field", "Value"});
+        // Set model for treeView
+        ui->treeView_interfaces->setModel(model);
+        ui->treeView_interfaces->setColumnWidth(0, 300);
+        // Add item to comboBox
         setupComboBox();
-        // setupInterfaceInfo();
+
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
-        // ui->comboBox_interface->setCurrentIndex(ui->comboBox_interface.);
     }
     catch (std::bad_alloc &bed)
     {
@@ -20,53 +28,75 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
 void CMainControlBlock::setupInterfaceInfo(int index)
 {
+    // delete rows for displaying new info
+    model->removeRows(0, model->rowCount());
+
+    // get index of interf. from combobox
     auto value = ui->comboBox_interface->itemData(index).toInt();
     qDebug() << "Value index from combobox is " << value;
 
-    // Create a QStandardItemModel to hold the data
-    QStandardItemModel *model = new QStandardItemModel();
-
-    // Set the header data for the model
-    model->setHorizontalHeaderLabels({"Field", "Value"});
-
+    // get network adapter properties description
     auto interfaceDescription = adapter->getNetworkProperties(value);
+
+    // get network adapter addresses description
+    auto intrfaceDescriptionAddreses = adapter->getNetworkAdapterAddreses(value);
 
     // Create the top-level item for "Network Adapter Properties"
     QList<QStandardItem *> topLevelItems;
-    QStandardItem *networkAdapterPropertiesItem = new QStandardItem("Network Adapter Properties");
+
+    QStandardItem *networkAdapterPropertiesItem = (new QStandardItem("Network Adapter Properties"));
+
     topLevelItems.append(networkAdapterPropertiesItem);
 
     // Create child items for "Network Adapter Properties"
-    QList<QStandardItem *> networkAdapterItems;
-    networkAdapterItems.append(new QStandardItem("Network Adapter"));
-    networkAdapterItems.append(new QStandardItem(interfaceDescription.networkAdapter));
+    QList<QStandardItem *> networkAdapterItems =
+        createStandardItemList("Network Adapter", interfaceDescription.networkAdapter);
+    QList<QStandardItem *> interfaceTypeItems = createStandardItemList(
+        "Interface Type", interfaceDescription.interfaceType, QIcon(":/icons/images/icons/cil-save.png"));
+    QList<QStandardItem *> hardwareAddressItems =
+        createStandardItemList("Hardware Address", interfaceDescription.hardwareAddress);
+    QList<QStandardItem *> connectionNameItems =
+        createStandardItemList("Connection Name", interfaceDescription.connectionName);
+    QList<QStandardItem *> connectionSpeedItems = createStandardItemList(
+        "Connection Speed", QString::number(interfaceDescription.connectionSpeed / 1000000) + QString(" Mbps"));
+    QList<QStandardItem *> mtuItems =
+        createStandardItemList("MTU", QString::number(interfaceDescription.MTU).append(" bytes"));
+
     networkAdapterPropertiesItem->appendRow(networkAdapterItems);
-
-    QList<QStandardItem *> interfaceTypeItems;
-    interfaceTypeItems.append(new QStandardItem(QIcon(":/icons/images/icons/cil-save.png"), "Interface Type"));
-    interfaceTypeItems.append(new QStandardItem(interfaceDescription.interfaceType));
     networkAdapterPropertiesItem->appendRow(interfaceTypeItems);
-
-    QList<QStandardItem *> hardwareAddressItems;
-    hardwareAddressItems.append(new QStandardItem("Hardware Address"));
-    hardwareAddressItems.append(new QStandardItem(interfaceDescription.hardwareAddress));
     networkAdapterPropertiesItem->appendRow(hardwareAddressItems);
-
-    QList<QStandardItem *> connectionNameItems;
-    connectionNameItems.append(new QStandardItem("Connection Name"));
-    connectionNameItems.append(new QStandardItem(interfaceDescription.connectionName));
     networkAdapterPropertiesItem->appendRow(connectionNameItems);
-
-    QList<QStandardItem *> connectionSpeedItems;
-    connectionSpeedItems.append(new QStandardItem("Connection Speed"));
-    connectionSpeedItems.append(
-        new QStandardItem(QString::number(interfaceDescription.connectionSpeed / 1000000) + QString(" Mbps")));
+    networkAdapterPropertiesItem->appendRow(mtuItems);
     networkAdapterPropertiesItem->appendRow(connectionSpeedItems);
 
-    model->appendRow(networkAdapterPropertiesItem);
+    QStandardItem *networkAdapterAddressesItem = new QStandardItem("Network Adapter Addresses");
+    topLevelItems.append(networkAdapterAddressesItem);
 
-    ui->treeView_interfaces->setModel(model);
-    ui->treeView_interfaces->setColumnWidth(0, 300);
+    // Create child items for "Network Adapter Addresses"
+    auto ipItem = createStandardItemList("IP", intrfaceDescriptionAddreses.IPAddr);
+    auto maskItem = createStandardItemList("Subnet Mask", intrfaceDescriptionAddreses.subnetMask);
+    auto dhcpItem = createStandardItemList("DHCP address", intrfaceDescriptionAddreses.DHCPAddr);
+    auto dhcpLeaseObtainedItem = createStandardItemList(
+        "DHCP Lease Obtained", intrfaceDescriptionAddreses.DHCPLeaseObtained.toString("dd.MM.yyyy hh:mm:ss"));
+    auto dhcpLeaseExpiresItem = createStandardItemList(
+        "DHCP Lease Expires", intrfaceDescriptionAddreses.DHCPLeaseExpires.toString("dd.MM.yyyy hh:mm:ss"));
+    auto gatewayItem = createStandardItemList("Default Gateway", intrfaceDescriptionAddreses.gatewayAddr);
+    auto dnsItem = createStandardItemList("DNS", intrfaceDescriptionAddreses.DNSServers);
+    auto dnsSuffixItem = createStandardItemList("DNS Suffix", intrfaceDescriptionAddreses.DNSSuffix);
+
+    networkAdapterAddressesItem->appendRow(ipItem);
+    networkAdapterAddressesItem->appendRow(maskItem);
+    networkAdapterAddressesItem->appendRow(dhcpItem);
+    networkAdapterAddressesItem->appendRow(dhcpLeaseObtainedItem);
+    networkAdapterAddressesItem->appendRow(dhcpLeaseExpiresItem);
+    networkAdapterAddressesItem->appendRow(gatewayItem);
+    networkAdapterAddressesItem->appendRow(dnsItem);
+    networkAdapterAddressesItem->appendRow(dnsSuffixItem);
+
+    model->appendRow(networkAdapterPropertiesItem);
+    model->appendRow(new QStandardItem(""));
+    model->appendRow(networkAdapterAddressesItem);
+
     ui->treeView_interfaces->expandAll();
 }
 
@@ -79,4 +109,12 @@ void CMainControlBlock::setupComboBox()
     {
         ui->comboBox_interface->addItem(it.value(), QVariant(it.key()));
     }
+}
+
+QList<QStandardItem *> CMainControlBlock::createStandardItemList(QString name, QString value, QIcon icon)
+{
+    QList<QStandardItem *> items;
+    items.append(new QStandardItem(icon, name));
+    items.append(new QStandardItem(value));
+    return items;
 }

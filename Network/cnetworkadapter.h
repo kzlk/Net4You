@@ -25,7 +25,7 @@ class CNetworkAdapter : public QWidget
     {
         QString networkAdapter{};
         QString interfaceType{};
-        QString hardwareAddress{};
+        QString hardwareAddress{"00-00-00-00-00-00"};
         QString connectionName{};
         uint connectionSpeed{};
         uint MTU{};
@@ -72,6 +72,8 @@ class CNetworkAdapter : public QWidget
     ULONG family = AF_UNSPEC;
     ULONG outBufLen{};
     DWORD dwRetVal = 0;
+    // Set the flags to pass to GetAdaptersAddresses
+    ULONG flags = GAA_FLAG_INCLUDE_GATEWAYS | GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_MULTICAST;
 
     // unsigned __int64 inBytes{};
     // unsigned __int64 outBytes{};

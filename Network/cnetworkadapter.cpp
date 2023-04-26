@@ -15,7 +15,7 @@ bool CNetworkAdapter::updateDeviceList()
     outBufLen = sizeof(IP_ADAPTER_ADDRESSES);
     pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);
 
-    if (GetAdaptersAddresses(family, GAA_FLAG_INCLUDE_PREFIX, NULL, pAddresses, &outBufLen) == ERROR_BUFFER_OVERFLOW)
+    if (GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen) == ERROR_BUFFER_OVERFLOW)
     {
         free(pAddresses);
         pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);
@@ -24,7 +24,7 @@ bool CNetworkAdapter::updateDeviceList()
     // Make an initial call to GetAdaptersAddresses to get the
     // size needed into the outBufLen variable
 
-    if (GetAdaptersAddresses(family, GAA_FLAG_INCLUDE_PREFIX, NULL, pAddresses, &outBufLen) == ERROR_BUFFER_OVERFLOW)
+    if (GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen) == ERROR_BUFFER_OVERFLOW)
     {
         free(pAddresses);
         pAddresses = (IP_ADAPTER_ADDRESSES *)malloc(outBufLen);
@@ -38,7 +38,7 @@ bool CNetworkAdapter::updateDeviceList()
         return false;
     }
 
-    dwRetVal = GetAdaptersAddresses(family, GAA_FLAG_INCLUDE_PREFIX, NULL, pAddresses, &outBufLen);
+    dwRetVal = GetAdaptersAddresses(family, flags, NULL, pAddresses, &outBufLen);
 
     return dwRetVal == NO_ERROR;
 }
@@ -108,6 +108,7 @@ CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int ind
 
 CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddreses(int indexAdapter)
 {
+
     getAdapterByIndex(pCurrAddresses, indexAdapter);
     if (pCurrAddresses != nullptr)
     {
@@ -145,7 +146,8 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
         }
 
         // retrive gateway
-        if (pCurrAddresses->FirstGatewayAddress != nullptr)
+        const PIP_ADAPTER_GATEWAY_ADDRESS_LH pGateway = pCurrAddresses->FirstGatewayAddress;
+        if (pGateway != nullptr)
         {
             address = (struct sockaddr_in *)pCurrAddresses->FirstGatewayAddress->Address.lpSockaddr;
             inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
@@ -155,6 +157,7 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
         // retrive DHCP
         if (pCurrAddresses->Dhcpv4Enabled)
         {
+
             isDHCPEnabled = true;
             address = (struct sockaddr_in *)pCurrAddresses->Dhcpv4Server.lpSockaddr;
             inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
@@ -162,7 +165,10 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
 
             // Retrieve the DHCP lease obtained and expires time
             adapterAddreses.DHCPLeaseExpires = QDateTime::currentDateTime().addSecs(pUnicast->ValidLifetime);
-            adapterAddreses.DHCPLeaseObtained = adapterAddreses.DHCPLeaseExpires.addSecs(0 - (pUnicast->LeaseLifetime));
+            auto toSub = (pUnicast->LeaseLifetime);
+            // qDebug() << "Lease LifeTime is " << (LONG)-pUnicast->LeaseLifetime;
+            adapterAddreses.DHCPLeaseObtained =
+                adapterAddreses.DHCPLeaseExpires.addSecs((long)-pUnicast->LeaseLifetime);
         }
 
         // retriveDNS
@@ -240,7 +246,7 @@ QString CNetworkAdapter::getAdapterType(PIP_ADAPTER_ADDRESSES &index)
 QString CNetworkAdapter::getHardwareAddress(PIP_ADAPTER_ADDRESSES &index)
 {
     if (index->PhysicalAddressLength == 0)
-        return "";
+        return "00-00-00-00-00-00";
 
     QString address{};
     char buffer[6]{};
