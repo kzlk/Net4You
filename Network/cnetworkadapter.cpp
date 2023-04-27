@@ -1,5 +1,5 @@
 #include "cnetworkadapter.h"
-
+#include <iostream>
 CNetworkAdapter::CNetworkAdapter()
 {
     if (!updateDeviceList())
@@ -94,6 +94,19 @@ CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int ind
         qDebug() << " adapterProperties.interfaceType is " << adapterProperties.interfaceType << '\n';
         adapterProperties.hardwareAddress = getHardwareAddress(pCurrAddresses);
         qDebug() << "adapterProperties.hardwareAddress is " << adapterProperties.hardwareAddress << '\n';
+        if (pCurrAddresses->PhysicalAddressLength != 0)
+            std::copy(std::begin(pCurrAddresses->PhysicalAddress), std::end(pCurrAddresses->PhysicalAddress),
+                      std::begin(adapterProperties.rowHardwareAddr));
+
+        // adapterProperties.rowHardwareAddr = pCurrAddresses->PhysicalAddress;
+        BYTE *n = pCurrAddresses->PhysicalAddress;
+        qDebug() << "Row hardware " << adapterProperties.rowHardwareAddr << "\t" << *n << '\n';
+
+        for (int i = 0; i < 6; i++)
+        {
+            qDebug("%.2X ", static_cast<int>(n[i]));
+        }
+
         adapterProperties.connectionName = QString::fromStdWString(pCurrAddresses->FriendlyName);
         qDebug() << " adapterProperties.connectionName  is " << adapterProperties.connectionName << '\n';
         adapterProperties.connectionSpeed = (pCurrAddresses->TransmitLinkSpeed);
@@ -160,15 +173,18 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
 
             isDHCPEnabled = true;
             address = (struct sockaddr_in *)pCurrAddresses->Dhcpv4Server.lpSockaddr;
-            inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
-            adapterAddreses.DHCPAddr = QString::fromLocal8Bit(ipAddressStr);
+            if (address != nullptr)
+            {
+                inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+                adapterAddreses.DHCPAddr = QString::fromLocal8Bit(ipAddressStr);
 
-            // Retrieve the DHCP lease obtained and expires time
-            adapterAddreses.DHCPLeaseExpires = QDateTime::currentDateTime().addSecs(pUnicast->ValidLifetime);
-            auto toSub = (pUnicast->LeaseLifetime);
-            // qDebug() << "Lease LifeTime is " << (LONG)-pUnicast->LeaseLifetime;
-            adapterAddreses.DHCPLeaseObtained =
-                adapterAddreses.DHCPLeaseExpires.addSecs((long)-pUnicast->LeaseLifetime);
+                // Retrieve the DHCP lease obtained and expires time
+                adapterAddreses.DHCPLeaseExpires = QDateTime::currentDateTime().addSecs(pUnicast->ValidLifetime);
+                // auto toSub = (pUnicast->LeaseLifetime);
+                //  qDebug() << "Lease LifeTime is " << (LONG)-pUnicast->LeaseLifetime;
+                adapterAddreses.DHCPLeaseObtained =
+                    adapterAddreses.DHCPLeaseExpires.addSecs((long)-pUnicast->LeaseLifetime);
+            }
         }
 
         // retriveDNS
@@ -184,6 +200,12 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
     }
 
     return adapterAddreses;
+}
+
+PIP_ADAPTER_ADDRESSES CNetworkAdapter::getInterface(int index)
+{
+    getAdapterByIndex(pCurrAddresses, index);
+    return pCurrAddresses;
 }
 
 void CNetworkAdapter::getAdapterByIndex(PIP_ADAPTER_ADDRESSES &adapter, int &index)

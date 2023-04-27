@@ -4,6 +4,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 {
     try
     {
+        speed = new CNetworkAdapterSpeed();
         adapter = new CNetworkAdapter();
         ui = qMain;
 
@@ -19,6 +20,31 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
+
+        // Get the model index for the "IP" item
+        // QModelIndex ipIndex = model->indexFromItem(ipItem.at(1));
+
+        // Update the "Value" field with the new IP address
+        // model->setData(ipIndex, "hello");
+
+        // Connect the networkSpeedChangeg signal to a lambda function
+        connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
+                [=](int received, int sent, float download, float upload) {
+                    // Find the "Download Speed" item in the model
+                    QModelIndex downloadIndex = model->indexFromItem(downloadedItem.at(1));
+                    QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
+                    // Update the "Value" field with the new download speed
+                    model->setData(downloadIndex, QString::number(received) + " - " + speed->convertSpeed(download));
+                    model->setData(uploadIndex, QString::number(sent) + " - " + speed->convertSpeed(upload));
+                });
+
+        speed->setIntervalForUpdatingSpeed(1000);
+
+        // Get a pointer to the "Some value" item
+        QStandardItem *someValueItem = model->itemFromIndex(model->index(0, 1));
+
+        // Update the item's data
+        someValueItem->setData("New value");
     }
     catch (std::bad_alloc &bed)
     {
@@ -62,12 +88,18 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     QList<QStandardItem *> mtuItems =
         createStandardItemList("MTU", QString::number(interfaceDescription.MTU).append(" bytes"));
 
+    downloadedItem = createStandardItemList("Bytes Received", "0");
+    uploadedItem = createStandardItemList("Bytes Sent", "0");
+    speed->setNetworkSpeedForAdapter(value, interfaceDescription.rowHardwareAddr);
+
     networkAdapterPropertiesItem->appendRow(networkAdapterItems);
     networkAdapterPropertiesItem->appendRow(interfaceTypeItems);
     networkAdapterPropertiesItem->appendRow(hardwareAddressItems);
     networkAdapterPropertiesItem->appendRow(connectionNameItems);
     networkAdapterPropertiesItem->appendRow(mtuItems);
     networkAdapterPropertiesItem->appendRow(connectionSpeedItems);
+    networkAdapterPropertiesItem->appendRow(downloadedItem);
+    networkAdapterPropertiesItem->appendRow(uploadedItem);
 
     QStandardItem *networkAdapterAddressesItem = new QStandardItem("Network Adapter Addresses");
     topLevelItems.append(networkAdapterAddressesItem);

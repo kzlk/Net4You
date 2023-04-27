@@ -912,7 +912,7 @@ Button */
                    <string notr="true">background-image: url(:/icons/images/icons/cil-home.png);</string>
                   </property>
                   <property name="text">
-                   <string>Wireless Adapter</string>
+                   <string>Network Adapter</string>
                   </property>
                  </widget>
                 </item>

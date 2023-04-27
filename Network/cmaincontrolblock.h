@@ -5,10 +5,11 @@
 #include "ui_main.h"
 #include "cnetworkadapter.h"
 #include "qstandarditemmodel.h"
+#include "cnetworkadapterspeed.h"
 
-class CMainControlBlock : public QWidget
+class CMainControlBlock : public QObject
 {
-    // Q_OBJECT
+    Q_OBJECT
   public:
     CMainControlBlock(Ui::MainWindow *main);
 
@@ -19,6 +20,10 @@ class CMainControlBlock : public QWidget
     Ui::MainWindow *ui;
     QStandardItemModel *model;
     CNetworkAdapter *adapter{};
+    CNetworkAdapterSpeed *speed{};
+
+    QList<QStandardItem *> downloadedItem{};
+    QList<QStandardItem *> uploadedItem{};
 
   public slots:
     void setupInterfaceInfo(int index);

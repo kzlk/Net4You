@@ -25,13 +25,18 @@ class CNetworkAdapter : public QWidget
     {
         QString networkAdapter{};
         QString interfaceType{};
+        // union hardAddr {
+        //     QString hardwareAddress{"00-00-00-00-00-00"};
+        //     BYTE rowHardwareAddress[8];
+        // };
         QString hardwareAddress{"00-00-00-00-00-00"};
         QString connectionName{};
         uint connectionSpeed{};
         uint MTU{};
+        BYTE rowHardwareAddr[8]{};
         //
-        QString bytesReceived{};
-        QString bytesSent{};
+        // QString bytesReceived{};
+        // QString bytesSent{};
     };
 
     struct NetworkAdapterAddreses
@@ -53,11 +58,16 @@ class CNetworkAdapter : public QWidget
     QStringList getListOfInterface();
     NetworkProperties getNetworkProperties(int indexAdapter);
     NetworkAdapterAddreses getNetworkAdapterAddreses(int indexAdapter);
+    BYTE *getRowHardwareAddr(int index);
+    PIP_ADAPTER_ADDRESSES getInterface(int index);
 
   private:
+    /*TODO - implement caching*/
     static QCache<quint16, PIP_ADAPTER_ADDRESSES> cachedAddresses_;
+
     QMap<int, QString> allInterfaceKeyValue{};
     QList<QString> allInterfaceList{};
+
     PIP_ADAPTER_INFO adapterInfoList{};
     PIP_ADAPTER_INFO adapterInfo{};
 
@@ -71,14 +81,10 @@ class CNetworkAdapter : public QWidget
     // default to unspecified address family (both)
     ULONG family = AF_UNSPEC;
     ULONG outBufLen{};
-    DWORD dwRetVal = 0;
+    DWORD dwRetVal{};
     // Set the flags to pass to GetAdaptersAddresses
     ULONG flags = GAA_FLAG_INCLUDE_GATEWAYS | GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_SKIP_ANYCAST | GAA_FLAG_SKIP_MULTICAST;
 
-    // unsigned __int64 inBytes{};
-    // unsigned __int64 outBytes{};
-    // unsigned __int64 preInBytes{};
-    // unsigned __int64 preOutBytes{};
     NetworkProperties adapterProperties{};
     NetworkAdapterAddreses adapterAddreses{};
 

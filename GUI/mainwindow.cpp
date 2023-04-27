@@ -5,9 +5,8 @@
 #include "ui_main.h"
 bool GLOBAL_STATE = false;
 bool GLOBAL_TITLE_BAR = true;
-Ui::MainWindow* widgets = nullptr;
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+Ui::MainWindow *widgets = nullptr;
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ::widgets = this->ui;
@@ -16,12 +15,10 @@ MainWindow::MainWindow(QWidget* parent)
     // ui->setSyleSheet()
     ui->pushButton->setStyleSheet("background-color: #6272a4;");
     ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
-    ui->tableWidget->setStyleSheet(
-        "QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { "
-        "background: #6272a4; }");
-    ui->scrollArea->setStyleSheet(
-        "QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { "
-        "background: #6272a4; }");
+    ui->tableWidget->setStyleSheet("QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { "
+                                   "background: #6272a4; }");
+    ui->scrollArea->setStyleSheet("QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { "
+                                  "background: #6272a4; }");
     ui->comboBox->setStyleSheet("background-color: #6272a4;");
     ui->horizontalScrollBar->setStyleSheet("background-color: #6272a4;");
     ui->verticalScrollBar->setStyleSheet("background-color: #6272a4;");
@@ -37,45 +34,35 @@ MainWindow::MainWindow(QWidget* parent)
     widgets->titleRightInfo->setText(description);
 
     // TOGGLE MENU
-    connect(widgets->toggleButton, &QPushButton::clicked,
-            [=]() { MainWindow::toggleMenu(true); });
+    connect(widgets->toggleButton, &QPushButton::clicked, [=]() { MainWindow::toggleMenu(true); });
 
     // SET UI DEFINITIONS
     MainWindow::uiDefinitions();
 
     // QTableWidget PARAMETERS
-    widgets->tableWidget->horizontalHeader()->setSectionResizeMode(
-        QHeaderView::Stretch);
+    widgets->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     // BUTTONS CLICK
 
     // LEFT MENUS
-    connect(widgets->btn_home, &QPushButton::clicked, this,
-            &MainWindow::buttonClick);
-    connect(widgets->btn_widgets, &QPushButton::clicked, this,
-            &MainWindow::buttonClick);
-    connect(widgets->btn_new, &QPushButton::clicked, this,
-            &MainWindow::buttonClick);
-    connect(widgets->btn_save, &QPushButton::clicked, this,
-            &MainWindow::buttonClick);
+    connect(widgets->btn_home, &QPushButton::clicked, this, &MainWindow::buttonClick);
+    connect(widgets->btn_widgets, &QPushButton::clicked, this, &MainWindow::buttonClick);
+    connect(widgets->btn_new, &QPushButton::clicked, this, &MainWindow::buttonClick);
+    connect(widgets->btn_save, &QPushButton::clicked, this, &MainWindow::buttonClick);
 
     // EXTRA LEFT BOX
-    connect(widgets->toggleLeftBox, &QPushButton::clicked,
-            [=]() { MainWindow::toggleLeftBox(true); });
-    connect(widgets->extraCloseColumnBtn, &QPushButton::clicked,
-            [=]() { MainWindow::toggleLeftBox(true); });
+    connect(widgets->toggleLeftBox, &QPushButton::clicked, [=]() { MainWindow::toggleLeftBox(true); });
+    connect(widgets->extraCloseColumnBtn, &QPushButton::clicked, [=]() { MainWindow::toggleLeftBox(true); });
 
     // EXTRA RIGHT BOX
-    connect(widgets->settingsTopBtn, &QPushButton::clicked,
-            [=]() { MainWindow::toggleRightBox(true); });
+    connect(widgets->settingsTopBtn, &QPushButton::clicked, [=]() { MainWindow::toggleRightBox(true); });
 
     // SHOW APP
     //  this->show();
 
     // SET CUSTOM THEME
     bool useCustomTheme = false;
-    QString themeFile =
-        "E:/Developer_Project/C++/QT/KURSOVA_SPZ/themes/py_dracula_dark.qss";
+    QString themeFile = "E:/Developer_Project/C++/QT/KURSOVA_SPZ/themes/py_dracula_light.qss";
 
     // SET THEME AND HACKS
     if (useCustomTheme)
@@ -87,23 +74,20 @@ MainWindow::MainWindow(QWidget* parent)
         // AppFunctions::setThemeHack(this);
         settings.BTN_LEFT_BOX_COLOR = "background-color: #495474;";
         settings.BTN_RIGHT_BOX_COLOR = "background-color: #495474;";
-        settings.MENU_SELECTED_STYLESHEET =
-            ""
-            " border-left: 22px solid qlineargradient(spread:pad, x1:0.034, "
-            "y1:0, x2:0.216, y2:0, stop:0.499 rgba(255, 121, 198, 255), "
-            "stop:0.5 rgba(85, 170, 255, 0));    background-color: #566388;   "
-            "";
+        settings.MENU_SELECTED_STYLESHEET = ""
+                                            " border-left: 22px solid qlineargradient(spread:pad, x1:0.034, "
+                                            "y1:0, x2:0.216, y2:0, stop:0.499 rgba(255, 121, 198, 255), "
+                                            "stop:0.5 rgba(85, 170, 255, 0));    background-color: #566388;   "
+                                            "";
 
         // SET MANUAL STYLES
         ui->lineEdit->setStyleSheet("background-color: #6272a4;");
         ui->pushButton->setStyleSheet("background-color: #6272a4;");
         ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
-        ui->tableWidget->setStyleSheet(
-            "QScrollBar:vertical { background: #6272a4; } "
-            "QScrollBar:horizontal { background: #6272a4; }");
-        ui->scrollArea->setStyleSheet(
-            "QScrollBar:vertical { background: #6272a4; } "
-            "QScrollBar:horizontal { background: #6272a4; }");
+        ui->tableWidget->setStyleSheet("QScrollBar:vertical { background: #6272a4; } "
+                                       "QScrollBar:horizontal { background: #6272a4; }");
+        ui->scrollArea->setStyleSheet("QScrollBar:vertical { background: #6272a4; } "
+                                      "QScrollBar:horizontal { background: #6272a4; }");
         ui->comboBox->setStyleSheet("background-color: #6272a4;");
         ui->horizontalScrollBar->setStyleSheet("background-color: #6272a4;");
         ui->verticalScrollBar->setStyleSheet("background-color: #6272a4;");
@@ -112,8 +96,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // SET HOME PAGE AND SELECT MENU
     widgets->stackedWidget->setCurrentWidget(widgets->home);
-    widgets->btn_home->setStyleSheet(
-        MainWindow::selectMenu(widgets->btn_home->styleSheet()));
+    widgets->btn_home->setStyleSheet(MainWindow::selectMenu(widgets->btn_home->styleSheet()));
 
     /*Main control block for control the functions with network*/
     controlBlock = new CMainControlBlock(ui);
@@ -133,7 +116,10 @@ MainWindow::MainWindow(QWidget* parent)
     //                              ui->tableView_interfaces->verticalHeader()->hide();
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
 
 void MainWindow::maximize_restore()
 {
@@ -144,8 +130,7 @@ void MainWindow::maximize_restore()
         GLOBAL_STATE = true;
         ui->appMargins->setContentsMargins(0, 0, 0, 0);
         ui->maximizeRestoreAppBtn->setToolTip("Restore");
-        ui->maximizeRestoreAppBtn->setIcon(
-            QIcon(":/icons/images/icons/icon_restore.png"));
+        ui->maximizeRestoreAppBtn->setIcon(QIcon(":/icons/images/icons/icon_restore.png"));
         ui->frame_size_grip->hide();
         left_grip->hide();
         right_grip->hide();
@@ -159,8 +144,7 @@ void MainWindow::maximize_restore()
         resize(width() + 1, height() + 1);
         ui->appMargins->setContentsMargins(10, 10, 10, 10);
         ui->maximizeRestoreAppBtn->setToolTip("Maximize");
-        ui->maximizeRestoreAppBtn->setIcon(
-            QIcon(":/icons/images/icons/icon_maximize.png"));
+        ui->maximizeRestoreAppBtn->setIcon(QIcon(":/icons/images/icons/icon_maximize.png"));
         ui->frame_size_grip->show();
         left_grip->show();
         right_grip->show();
@@ -171,9 +155,15 @@ void MainWindow::maximize_restore()
 
 // RETURN STATUS
 // ///////////////////////////////////////////////////////////////
-bool MainWindow::returnStatus() { return GLOBAL_STATE; }
+bool MainWindow::returnStatus()
+{
+    return GLOBAL_STATE;
+}
 
-void MainWindow::setStatus(bool status) { GLOBAL_STATE = status; }
+void MainWindow::setStatus(bool status)
+{
+    GLOBAL_STATE = status;
+}
 
 // TOGGLE MENU
 // ///////////////////////////////////////////////////////////////
@@ -190,8 +180,7 @@ void MainWindow::toggleMenu(bool enable)
         int widthExtended = (width == 60) ? maxExtend : standard;
 
         // ANIMATION
-        QPropertyAnimation* animation =
-            new QPropertyAnimation(ui->leftMenuBg, "minimumWidth");
+        QPropertyAnimation *animation = new QPropertyAnimation(ui->leftMenuBg, "minimumWidth");
         animation->setDuration(settings.TIME_ANIMATION);
         animation->setStartValue(width);
         animation->setEndValue(widthExtended);
@@ -224,8 +213,7 @@ void MainWindow::toggleLeftBox(bool enable)
             if (widthRightBox != 0)
             {
                 style = ui->settingsTopBtn->styleSheet();
-                ui->settingsTopBtn->setStyleSheet(
-                    style.replace(settings.BTN_RIGHT_BOX_COLOR, ""));
+                ui->settingsTopBtn->setStyleSheet(style.replace(settings.BTN_RIGHT_BOX_COLOR, ""));
             }
         }
         else
@@ -264,8 +252,7 @@ void MainWindow::toggleRightBox(bool enable)
             if (widthLeftBox != 0)
             {
                 style = ui->toggleLeftBox->styleSheet();
-                ui->toggleLeftBox->setStyleSheet(
-                    style.replace(settings.BTN_LEFT_BOX_COLOR, ""));
+                ui->toggleLeftBox->setStyleSheet(style.replace(settings.BTN_LEFT_BOX_COLOR, ""));
             }
         }
         else
@@ -279,8 +266,7 @@ void MainWindow::toggleRightBox(bool enable)
     }
 }
 
-void MainWindow::start_box_animation(int left_box_width, int right_box_width,
-                                     QString direction)
+void MainWindow::start_box_animation(int left_box_width, int right_box_width, QString direction)
 {
     int right_width = 0;
     int left_width = 0;
@@ -304,23 +290,21 @@ void MainWindow::start_box_animation(int left_box_width, int right_box_width,
     }
 
     // ANIMATION LEFT BOX
-    QPropertyAnimation* left_box =
-        new QPropertyAnimation(ui->extraLeftBox, "minimumWidth");
+    QPropertyAnimation *left_box = new QPropertyAnimation(ui->extraLeftBox, "minimumWidth");
     left_box->setDuration(settings.TIME_ANIMATION);
     left_box->setStartValue(left_box_width);
     left_box->setEndValue(left_width);
     left_box->setEasingCurve(QEasingCurve::InOutQuart);
 
     // ANIMATION RIGHT BOX
-    QPropertyAnimation* right_box =
-        new QPropertyAnimation(ui->extraRightBox, "minimumWidth");
+    QPropertyAnimation *right_box = new QPropertyAnimation(ui->extraRightBox, "minimumWidth");
     right_box->setDuration(settings.TIME_ANIMATION);
     right_box->setStartValue(right_box_width);
     right_box->setEndValue(right_width);
     right_box->setEasingCurve(QEasingCurve::InOutQuart);
 
     // GROUP ANIMATION
-    QParallelAnimationGroup* group = new QParallelAnimationGroup();
+    QParallelAnimationGroup *group = new QParallelAnimationGroup();
     group->addAnimation(left_box);
     group->addAnimation(right_box);
     group->start();
@@ -342,9 +326,9 @@ QString MainWindow::deselectMenu(QString getStyle)
 }
 
 // START SELECTION
-void MainWindow::selectStandardMenu(QWidget* widget)
+void MainWindow::selectStandardMenu(QWidget *widget)
 {
-    for (auto w : ui->topMenu->findChildren<QPushButton*>())
+    for (auto w : ui->topMenu->findChildren<QPushButton *>())
     {
         if (w->objectName() == widget->objectName())
         {
@@ -355,9 +339,9 @@ void MainWindow::selectStandardMenu(QWidget* widget)
 }
 
 // RESET SELECTION
-void MainWindow::resetStyle(QWidget* widget)
+void MainWindow::resetStyle(QWidget *widget)
 {
-    for (auto w : ui->topMenu->findChildren<QPushButton*>())
+    for (auto w : ui->topMenu->findChildren<QPushButton *>())
     {
         if (w->objectName() != widget->objectName())
         {
@@ -414,14 +398,11 @@ void MainWindow::uiDefinitions()
 
     // Create size grip for resizing the window
     sizegrip = new QSizeGrip(ui->frame_size_grip);
-    sizegrip->setStyleSheet(
-        "width: 20px; height: 20px; margin 0px; padding: 0px;");
+    sizegrip->setStyleSheet("width: 20px; height: 20px; margin 0px; padding: 0px;");
 
     // Connect title bar buttons to their respective slots
-    connect(ui->minimizeAppBtn, &QPushButton::clicked, this,
-            &MainWindow::showMinimized);
-    connect(ui->maximizeRestoreAppBtn, &QPushButton::clicked, this,
-            &MainWindow::maximize_restore);
+    connect(ui->minimizeAppBtn, &QPushButton::clicked, this, &MainWindow::showMinimized);
+    connect(ui->maximizeRestoreAppBtn, &QPushButton::clicked, this, &MainWindow::maximize_restore);
     connect(ui->closeAppBtn, &QPushButton::clicked, this, &MainWindow::close);
 }
 // BUTTONS CLICK
@@ -430,7 +411,7 @@ void MainWindow::uiDefinitions()
 void MainWindow::buttonClick()
 {
     // GET BUTTON CLICKED
-    QPushButton* btn = qobject_cast<QPushButton*>(sender());
+    QPushButton *btn = qobject_cast<QPushButton *>(sender());
     QString btnName = btn->objectName();
     // SHOW HOME PAGE
     if (btnName == "btn_home")
@@ -451,10 +432,9 @@ void MainWindow::buttonClick()
     // SHOW NEW PAGE
     if (btnName == "btn_new")
     {
-        widgets->stackedWidget->setCurrentWidget(widgets->new_page); // SET PAGE
-        MainWindow::resetStyle(btn); // RESET ANOTHERS BUTTONS SELECTED
-        btn->setStyleSheet(
-            MainWindow::selectMenu(btn->styleSheet())); // SELECT MENU
+        widgets->stackedWidget->setCurrentWidget(widgets->new_page);   // SET PAGE
+        MainWindow::resetStyle(btn);                                   // RESET ANOTHERS BUTTONS SELECTED
+        btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet())); // SELECT MENU
     }
 
     if (btnName == "btn_save")
@@ -468,7 +448,7 @@ void MainWindow::buttonClick()
 
 // RESIZE EVENTS
 // ///////////////////////////////////////////////////////////////
-void MainWindow::resizeEvent(QResizeEvent* event)
+void MainWindow::resizeEvent(QResizeEvent *event)
 {
     // Update Size Grips
     MainWindow::resizeGrips();
@@ -485,23 +465,23 @@ void MainWindow::resizeGrips()
     }
 }
 
-void MainWindow::setupDeviceInfo() {}
+void MainWindow::setupDeviceInfo()
+{
+}
 
-bool MainWindow::eventFilter(QObject* obj, QEvent* event)
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
 
-    if (obj == ui->titleRightInfo &&
-        event->type() == QEvent::MouseButtonDblClick)
+    if (obj == ui->titleRightInfo && event->type() == QEvent::MouseButtonDblClick)
     {
         QTimer::singleShot(250, [this]() { maximize_restore(); });
         return true;
     }
 
-    else if (obj == ui->titleRightInfo &&
-             event->type() == QEvent::MouseButtonPress)
+    else if (obj == ui->titleRightInfo && event->type() == QEvent::MouseButtonPress)
     {
         // Set drag position for move event
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->button() == Qt::LeftButton)
         {
             dragPos = mouseEvent->globalPos() - this->frameGeometry().topLeft();
@@ -512,7 +492,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
     else if (obj == ui->titleRightInfo && event->type() == QEvent::MouseMove)
     {
         // Move window
-        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
         if (mouseEvent->buttons() & Qt::LeftButton)
         {
             QMainWindow::move((mouseEvent->globalPos() - dragPos).toPoint());
@@ -541,7 +521,7 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event)
 }
 // MOUSE CLICK EVENTS
 // ///////////////////////////////////////////////////////////////
-void MainWindow::mousePressEvent(QMouseEvent* event)
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     // SET DRAG POS WINDOW
     this->dragPos = event->globalPosition();
@@ -556,7 +536,7 @@ void MainWindow::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void MainWindow::dobleClickMaximizeRestore(QMouseEvent* event)
+void MainWindow::dobleClickMaximizeRestore(QMouseEvent *event)
 {
     // IF DOUBLE CLICK CHANGE STATUS
     if (event->type() == QEvent::MouseButtonDblClick)

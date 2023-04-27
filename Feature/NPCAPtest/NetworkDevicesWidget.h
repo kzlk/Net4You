@@ -226,7 +226,24 @@ public slots:
 	{
 		DWORD Size = sizeof(MIB_IFTABLE);
 		MIB_IFTABLE* Table = (PMIB_IFTABLE)malloc(Size);
+
+
+		DWORD Size2 = sizeof(MIB_IF_TABLE2);
+        MIB_IF_TABLE2 *t2 = (PMIB_IF_TABLE2)malloc(Size2);
+
+		Size2 = sizeof(MIB_IF_TABLE2);
+
+
 		Size = sizeof(MIB_IFTABLE);
+
+		while (GetIfTable2(&t2) == ERROR_NOT_ENOUGH_MEMORY)
+		{
+            free(t2);
+            t2 = (PMIB_IF_TABLE2)malloc(Size2);
+		}
+        qDebug() << "Table2 num is " << t2->NumEntries << '\n';
+
+
 
 		while (GetIfTable(Table, &Size,TRUE) == ERROR_INSUFFICIENT_BUFFER)
 		{
@@ -246,33 +263,45 @@ public slots:
 		ifRow.InterfaceIndex = adapterInfo->Index;
 		if (GetIfEntry2Ex(MibIfEntryNormal, &ifRow) == NO_ERROR){}
 
-		for (DWORD i = 0; i < Table->dwNumEntries; i++)
-		{
-			int cnt = 0;
-			//if (Table->table[i].dwOperStatus != MIB_IF_OPER_STATUS_CONNECTED &&
-			//	Table->table[i].dwOperStatus != IF_OPER_STATUS_OPERATIONAL)
-			//{
-			//	continue;
-			//}
-				// qDebug() << "MAC dw = " << Table->table[i].bPhysAddr << " MAC " << adapterInfo->Address << '\n';
-				// Check if the current interface index matches the selected adapter's index
-				//qDebug() << "index = " << Table->table[i].dwInOctets << "\t" << Table->table[adapterInfo->Index - 1].
-					//dwInOctets;
-			if (memcmp(Table->table[i].bPhysAddr, adapterInfo->Address, 6) == 0
-				|| (Table->table[i].dwType == Table->table[adapterInfo->Index-1].dwType))
-			{
-				//qDebug() << "Index dw = " << Table->table[i].dwIndex << " adapterInfo->Index " << adapterInfo->Index <<
-					//'\n';
-				qDebug() << "Counter = " << cnt << " index is  " << Table->table[i].dwIndex <<  '\n';
-				inBytes += Table->table[i].dwInOctets;
-				outBytes += Table->table[i].dwOutOctets;
-			}
-				qDebug() << "i = " << i << " ||  " << Table->table[i].dwInOctets << " || " << Table->table[i].bDescr << " || "<<Table->table[i].dwIndex <<'\n';
-				// inBytes  += Table->table[i].dwInOctets;
-				// outBytes += Table->table[i].dwOutOctets;
-			
-			   }
-		free(Table);
+
+		MIB_IFROW row1{};
+        row1.dwIndex = adapterInfo->Index;
+        if (GetIfEntry(&row1) == NO_ERROR)
+        {
+        }
+        inBytes += row1.dwInOctets;
+        outBytes += row1.dwOutOctets;
+
+
+		//for (DWORD i = 0; i < Table->dwNumEntries; i++)
+		//{
+		//
+		//	int cnt = 0;
+		//	//if (Table->table[i].dwOperStatus != MIB_IF_OPER_STATUS_CONNECTED &&
+		//	//	Table->table[i].dwOperStatus != IF_OPER_STATUS_OPERATIONAL)
+		//	//{
+		//	//	continue;
+		//	//}
+        //    qDebug() << "DwIndex is " << Table->table[i].dwIndex
+        //             << " MAC dw = " << Table->table[i].bPhysAddr << " MAC " << adapterInfo->Address << '\n';
+		//		// Check if the current interface index matches the selected adapter's index
+		//		//qDebug() << "index = " << Table->table[i].dwInOctets << "\t" << Table->table[adapterInfo->Index - 1].
+		//			//dwInOctets;
+		//	if (memcmp(Table->table[i].bPhysAddr, adapterInfo->Address, 6) == 0
+		//		|| (Table->table[i].dwType == Table->table[adapterInfo->Index-1].dwType))
+		//	{
+		//		//qDebug() << "Index dw = " << Table->table[i].dwIndex << " adapterInfo->Index " << adapterInfo->Index <<
+		//			//'\n';
+		//		//qDebug() << "Counter = " << cnt << " index is  " << Table->table[i].dwIndex <<  '\n';
+		//		//inBytes += Table->table[i].dwInOctets;
+		//		//outBytes += Table->table[i].dwOutOctets;
+		//	}
+		//		//qDebug() << "i = " << i << " ||  " << Table->table[i].dwInOctets << " || " << Table->table[i].bDescr << " || "<<Table->table[i].dwIndex <<'\n';
+		//		// inBytes  += Table->table[i].dwInOctets;
+		//		// outBytes += Table->table[i].dwOutOctets;
+		//	
+		//	   }
+		//free(Table);
 
 
 		qDebug("inBytes: %llu , outBytes: %llu\n", inBytes, outBytes);
@@ -319,8 +348,8 @@ public slots:
 		qDebug("inBytes: %llu , outBytes: %llu\n", inBytes, preInBytes);
 
 		qDebug() << "inBytes - preInBytes" << inBytes - preInBytes << '\n';
-		downSpeed->setText(QString::number(ifRow.OutOctets) + " - " + text2);
-		upSpeed->setText(QString::number(ifRow.InOctets) + " - " + text);
+		downSpeed->setText(QString::number(row1.dwOutOctets) + " - " + text2);
+		upSpeed->setText(QString::number(row1.dwInOctets) + " - " + text);
 		qDebug() << text2 << '\n';
 	}
 
@@ -418,9 +447,9 @@ private:
 		return false;
 	}
 
-	float setPrecision(float v)
+	float setPrecision(const float v)
 	{
-		int i = v * 10.0;
+        const int i = v * 10.0;
 		return i / 10.0;
 	}
 };

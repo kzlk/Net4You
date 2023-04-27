@@ -1,10 +1,10 @@
 #ifndef CWIRELESSNETWORKADAPTER_H
 #define CWIRELESSNETWORKADAPTER_H
+#include "Network/cnetworkadapter.h"
 
-
-class CWirelessNetworkAdapter
+class CWirelessNetworkAdapter : public CNetworkAdapter
 {
-public:
+  public:
     CWirelessNetworkAdapter();
 };
 
