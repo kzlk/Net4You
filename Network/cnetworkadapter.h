@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <QDateTime>
+#include <objbase.h>
 // For caching
 #include <QCache>
 // #pragma comment(lib, "ws2_32.lib")
@@ -25,18 +26,11 @@ class CNetworkAdapter : public QWidget
     {
         QString networkAdapter{};
         QString interfaceType{};
-        // union hardAddr {
-        //     QString hardwareAddress{"00-00-00-00-00-00"};
-        //     BYTE rowHardwareAddress[8];
-        // };
         QString hardwareAddress{"00-00-00-00-00-00"};
         QString connectionName{};
         uint connectionSpeed{};
         uint MTU{};
         BYTE rowHardwareAddr[8]{};
-        //
-        // QString bytesReceived{};
-        // QString bytesSent{};
     };
 
     struct NetworkAdapterAddreses
@@ -60,6 +54,8 @@ class CNetworkAdapter : public QWidget
     NetworkAdapterAddreses getNetworkAdapterAddreses(int indexAdapter);
     BYTE *getRowHardwareAddr(int index);
     PIP_ADAPTER_ADDRESSES getInterface(int index);
+    char *getInterfaceGUID(int index);
+    bool isInterfaceWireless(int index);
 
   private:
     /*TODO - implement caching*/

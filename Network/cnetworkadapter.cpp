@@ -1,5 +1,6 @@
 #include "cnetworkadapter.h"
 #include <iostream>
+
 CNetworkAdapter::CNetworkAdapter()
 {
     if (!updateDeviceList())
@@ -102,15 +103,18 @@ CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int ind
         BYTE *n = pCurrAddresses->PhysicalAddress;
         qDebug() << "Row hardware " << adapterProperties.rowHardwareAddr << "\t" << *n << '\n';
 
-        for (int i = 0; i < 6; i++)
-        {
-            qDebug("%.2X ", static_cast<int>(n[i]));
-        }
+        // for (int i = 0; i < 6; i++)
+        //{
+        //     qDebug("%.2X ", static_cast<int>(n[i]));
+        // }
 
         adapterProperties.connectionName = QString::fromStdWString(pCurrAddresses->FriendlyName);
         qDebug() << " adapterProperties.connectionName  is " << adapterProperties.connectionName << '\n';
         adapterProperties.connectionSpeed = (pCurrAddresses->TransmitLinkSpeed);
         qDebug() << "adapterProperties.connectionSpeedis " << adapterProperties.connectionSpeed << '\n';
+
+        qDebug("Interface GUID is %s\n", pCurrAddresses->AdapterName);
+
         adapterProperties.MTU = pCurrAddresses->Mtu;
     }
     else
@@ -206,6 +210,23 @@ PIP_ADAPTER_ADDRESSES CNetworkAdapter::getInterface(int index)
 {
     getAdapterByIndex(pCurrAddresses, index);
     return pCurrAddresses;
+}
+
+char *CNetworkAdapter::getInterfaceGUID(int index)
+{
+    getAdapterByIndex(pCurrAddresses, index);
+    if (pCurrAddresses != nullptr)
+        return pCurrAddresses->AdapterName;
+    return nullptr;
+}
+
+bool CNetworkAdapter::isInterfaceWireless(int index)
+{
+    getAdapterByIndex(pCurrAddresses, index);
+    if (pCurrAddresses != nullptr)
+        if (pCurrAddresses->IfType == IF_TYPE_IEEE80211)
+            return true;
+    return false;
 }
 
 void CNetworkAdapter::getAdapterByIndex(PIP_ADAPTER_ADDRESSES &adapter, int &index)

@@ -6,6 +6,7 @@
 #include "cnetworkadapter.h"
 #include "qstandarditemmodel.h"
 #include "cnetworkadapterspeed.h"
+#include "cwirelessnetworkadapter.h"
 
 class CMainControlBlock : public QObject
 {
@@ -19,8 +20,10 @@ class CMainControlBlock : public QObject
 
     Ui::MainWindow *ui;
     QStandardItemModel *model;
+
     CNetworkAdapter *adapter{};
     CNetworkAdapterSpeed *speed{};
+    CWirelessNetworkAdapter *wirelessAdapter{};
 
     QList<QStandardItem *> downloadedItem{};
     QList<QStandardItem *> uploadedItem{};

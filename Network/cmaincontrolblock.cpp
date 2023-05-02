@@ -6,6 +6,8 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
     {
         speed = new CNetworkAdapterSpeed();
         adapter = new CNetworkAdapter();
+        wirelessAdapter = new CWirelessNetworkAdapter();
+
         ui = qMain;
 
         // Create a QStandardItemModel to hold the data
@@ -128,6 +130,35 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     model->appendRow(networkAdapterPropertiesItem);
     model->appendRow(new QStandardItem(""));
     model->appendRow(networkAdapterAddressesItem);
+    model->appendRow(new QStandardItem(""));
+
+    /*Wireless*/
+
+    if (adapter->isInterfaceWireless(value))
+    {
+        wirelessAdapter->updateWlanProperties();
+        if (wirelessAdapter->isInterfaceConnectedToWifi(interfaceDescription.networkAdapter))
+        {
+
+            auto wirelessAdapterItem = new QStandardItem("Network Adapter Addresses");
+
+            auto wirelessProperties = wirelessAdapter->getWlanProperties(interfaceDescription.networkAdapter);
+
+            auto networkTypeItem = createStandardItemList("Network Type", wirelessProperties.networkType);
+            auto ssidItem = createStandardItemList("SSID", wirelessProperties.ssid);
+            auto bssidItem = createStandardItemList("BSSID", wirelessProperties.bssid);
+            auto authAlgo = createStandardItemList("Authentication Algorithm", wirelessProperties.authAlgorithm);
+            auto cipherAlgo = createStandardItemList("Cipher Algorithm", wirelessProperties.cipherAlgo);
+
+            wirelessAdapterItem->appendRow(networkTypeItem);
+            wirelessAdapterItem->appendRow(ssidItem);
+            wirelessAdapterItem->appendRow(bssidItem);
+            wirelessAdapterItem->appendRow(authAlgo);
+            wirelessAdapterItem->appendRow(cipherAlgo);
+
+            model->appendRow(wirelessAdapterItem);
+        }
+    }
 
     ui->treeView_interfaces->expandAll();
 }
