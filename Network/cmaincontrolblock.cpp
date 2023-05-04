@@ -42,11 +42,18 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
         speed->setIntervalForUpdatingSpeed(1000);
 
-        // Get a pointer to the "Some value" item
-        QStandardItem *someValueItem = model->itemFromIndex(model->index(0, 1));
+        // connect(wirelessAdapter, &CWirelessNetworkAdapter::updateRate, [=](int transmit, int receive) {
+        //     QModelIndex transmitIndex = model->indexFromItem(transmitRateItem.at(1));
+        //     QModelIndex receiveIndex = model->indexFromItem(receiveRateItem.at(1));
+        //     model->setData(transmitIndex, QString::number(transmit / 1000) + " Mbps");
+        //     model->setData(receiveIndex, QString::number(receive / 1000) + " Mbps");
+        // });
 
-        // Update the item's data
-        someValueItem->setData("New value");
+        connect(wirelessAdapter, &CWirelessNetworkAdapter::updateSignalStrength, [=](int signal) {
+            QModelIndex signalIndex = model->indexFromItem(signalStreghtItem.at(1));
+            model->setData(signalIndex,
+                           QString::number(signal) + " dBm (" + wirelessAdapter->getSignalLvlFromDBM(signal) + ")");
+        });
     }
     catch (std::bad_alloc &bed)
     {
@@ -133,10 +140,12 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     model->appendRow(new QStandardItem(""));
 
     /*Wireless*/
-
+    wirelessAdapter->stopTimer();
     if (adapter->isInterfaceWireless(value))
     {
-        wirelessAdapter->updateWlanProperties();
+
+        wirelessAdapter->updateWlanProperties(); // update every time
+
         if (wirelessAdapter->isInterfaceConnectedToWifi(interfaceDescription.networkAdapter))
         {
 
@@ -150,11 +159,29 @@ void CMainControlBlock::setupInterfaceInfo(int index)
             auto authAlgo = createStandardItemList("Authentication Algorithm", wirelessProperties.authAlgorithm);
             auto cipherAlgo = createStandardItemList("Cipher Algorithm", wirelessProperties.cipherAlgo);
 
+            channelItem = createStandardItemList(
+                "Channel", QString::number(wirelessAdapter->getWifiChannelNumFromMhz(wirelessProperties.channelMHz)) +
+                               " (" + QString::number(wirelessProperties.channelMHz) + " Mhz)");
+
+            signalStreghtItem = createStandardItemList("Signal Strength", "");
+
+            transmitRateItem =
+                createStandardItemList("Transmit Rate", QString::number(wirelessProperties.transmitRate) + " Mbps");
+            receiveRateItem =
+                createStandardItemList("Receive Rate", QString::number(wirelessProperties.receieveRate) + " Mbps");
+
+            wirelessAdapter->setWlanInterfaceForUpdating(interfaceDescription.networkAdapter);
+            wirelessAdapter->startTimer(1000);
+
             wirelessAdapterItem->appendRow(networkTypeItem);
             wirelessAdapterItem->appendRow(ssidItem);
             wirelessAdapterItem->appendRow(bssidItem);
             wirelessAdapterItem->appendRow(authAlgo);
             wirelessAdapterItem->appendRow(cipherAlgo);
+            wirelessAdapterItem->appendRow(channelItem);
+            wirelessAdapterItem->appendRow(signalStreghtItem);
+            wirelessAdapterItem->appendRow(transmitRateItem);
+            wirelessAdapterItem->appendRow(receiveRateItem);
 
             model->appendRow(wirelessAdapterItem);
         }

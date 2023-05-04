@@ -28,6 +28,12 @@ class CMainControlBlock : public QObject
     QList<QStandardItem *> downloadedItem{};
     QList<QStandardItem *> uploadedItem{};
 
+    // For Wlan
+    QList<QStandardItem *> channelItem{};
+    QList<QStandardItem *> signalStreghtItem{};
+    QList<QStandardItem *> transmitRateItem{};
+    QList<QStandardItem *> receiveRateItem{};
+
   public slots:
     void setupInterfaceInfo(int index);
 };

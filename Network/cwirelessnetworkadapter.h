@@ -8,8 +8,9 @@
 // #pragma comment(lib, "wlanapi.lib")
 // #pragma comment(lib, "ole32.lib")
 
-class CWirelessNetworkAdapter /*: public CNetworkAdapter*/
+class CWirelessNetworkAdapter : public QObject /*: public CNetworkAdapter*/
 {
+    Q_OBJECT
     struct WlanProperties
     {
         QString networkType{};
@@ -32,6 +33,14 @@ class CWirelessNetworkAdapter /*: public CNetworkAdapter*/
     WlanProperties getWlanProperties(QString interfaceName);
     bool isInterfaceConnectedToWifi(QString &interfaceName);
     char *convertGuidToString(GUID interfaceGUID);
+
+    void setWlanInterfaceForUpdating(QString &intefaceName);
+
+    void startTimer(int interval);
+    void stopTimer();
+
+    QString getSignalLvlFromDBM(int dBm);
+    int getWifiChannelNumFromMhz(int channel);
 
   private:
     QString interfaceName{};

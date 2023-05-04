@@ -1,9 +1,12 @@
 #include "cwirelessnetworkadapter.h"
+#include "qtimer.h"
 
 CWirelessNetworkAdapter::CWirelessNetworkAdapter()
 {
     if (!updateWlanProperties())
         throw std::bad_alloc();
+
+    timer = new QTimer();
 }
 
 CWirelessNetworkAdapter::~CWirelessNetworkAdapter()
@@ -74,6 +77,9 @@ CWirelessNetworkAdapter::WlanProperties CWirelessNetworkAdapter::getWlanProperti
             wlanProperties.bssid = getMacAddress(pConnectInfo);
             wlanProperties.authAlgorithm = getAuthAlgo(pConnectInfo);
             wlanProperties.cipherAlgo = getCipherAlgo(pConnectInfo);
+            wlanProperties.channelMHz = pBssEntry->ulChCenterFrequency / 1000;
+            wlanProperties.transmitRate = pConnectInfo->wlanAssociationAttributes.ulTxRate / 1000;
+            wlanProperties.receieveRate = pConnectInfo->wlanAssociationAttributes.ulRxRate / 1000;
         }
     }
 
@@ -86,6 +92,63 @@ bool CWirelessNetworkAdapter::isInterfaceConnectedToWifi(QString &interfaceName)
     if (pIfInfo != nullptr)
         return pIfInfo->isState == wlan_interface_state_connected;
     return false;
+}
+
+void CWirelessNetworkAdapter::setWlanInterfaceForUpdating(QString &intefaceName)
+{
+    this->interfaceName = intefaceName;
+    disconnect(timer, &QTimer::timeout, this, &CWirelessNetworkAdapter::updateRealTimeValues);
+    connect(timer, &QTimer::timeout, this, &CWirelessNetworkAdapter::updateRealTimeValues);
+}
+
+void CWirelessNetworkAdapter::startTimer(int interval)
+{
+    timer->start(interval);
+}
+
+void CWirelessNetworkAdapter::stopTimer()
+{
+    timer->stop();
+}
+
+QString CWirelessNetworkAdapter::getSignalLvlFromDBM(int dBm)
+{
+    if (dBm <= -30 && dBm >= -50)
+    {
+        return "Excellent";
+    }
+    else if (dBm <= -51 && dBm >= -60)
+    {
+        return "Good";
+    }
+    else if (dBm <= -61 && dBm >= -70)
+    {
+        return "Fair";
+    }
+    else if (dBm <= -71 && dBm >= -85)
+    {
+        return "Poor";
+    }
+    else
+    {
+        return "Unreliable";
+    }
+}
+
+int CWirelessNetworkAdapter::getWifiChannelNumFromMhz(int channel)
+{
+    if (channel == 2484)
+    {
+        return 14;
+    }
+    else if (channel < 2412 || channel > 2484)
+    {
+        return -1; // Frequency outside 2.4 GHz band
+    }
+    else
+    {
+        return (channel - 2407) / 5; // Calculate channel number based on frequency
+    }
 }
 
 void CWirelessNetworkAdapter::searchInterface(PWLAN_INTERFACE_INFO &info, QString &interfaceName)
@@ -249,5 +312,39 @@ QString CWirelessNetworkAdapter::getCipherAlgo(PWLAN_CONNECTION_ATTRIBUTES &pCon
     default:
         return ("Unknown");
         break;
+    }
+}
+
+void CWirelessNetworkAdapter::updateRealTimeValues()
+{
+    // if (!this->updateWlanProperties())
+    //     throw std::bad_alloc();
+
+    if (pIfList == nullptr)
+        return;
+
+    searchInterface(pIfInfo, interfaceName);
+    if (pIfInfo != nullptr)
+    {
+        if (isWlanStateConnected(pIfInfo))
+        {
+            // Get the BSS Entry
+            dwResult = WlanGetNetworkBssList(hClient, &pIfInfo->InterfaceGuid,
+                                             &pConnectInfo->wlanAssociationAttributes.dot11Ssid,
+                                             dot11_BSS_type_infrastructure, TRUE, NULL, &pBssList);
+
+            if (dwResult != ERROR_SUCCESS)
+            {
+                qDebug("WlanGetNetworkBssList from updateRealTimeValues() getting failed\n");
+                return;
+            }
+
+            pBssEntry = &pBssList->wlanBssEntries[i];
+
+            emit updateSignalStrength(pBssEntry->lRssi);
+            emit updateChannel(pBssEntry->ulChCenterFrequency);
+            emit updateRate(pConnectInfo->wlanAssociationAttributes.ulTxRate,
+                            pConnectInfo->wlanAssociationAttributes.ulRxRate);
+        }
     }
 };
