@@ -33,7 +33,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
                 setupComboBox();
 
                 // setupInterfaceInfo(ui->comboBox_interface->currentIndex());
-                //  setupInterfaceInfo(index);
+                // setupInterfaceInfo(index);
                 // ui->comboBox_interface->setCurrentIndex(ui->comboBox_interface->currentIndex());
             }
             else

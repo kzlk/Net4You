@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     settings.ENABLE_CUSTOM_TITLE_BAR = true;
     // APP NAME
-    QString title = "Net4You";
-    QString description = "Lightweiht program to network monitoring";
+    QString title = "Net4U";
+    QString description = "Lightweigth program to network monitoring";
 
     // APPLY TEXTS
     this->setWindowTitle(title);

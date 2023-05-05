@@ -685,6 +685,12 @@ Button */
                <height>42</height>
               </rect>
              </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
                <width>42</width>
@@ -698,7 +704,9 @@ Button */
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-image: url(:/icons/images/icons/cil-file.png);</string>
+              <string notr="true">background-image: url(:/images/images/images/logo4.png);
+
+</string>
              </property>
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
@@ -711,9 +719,9 @@ Button */
              <property name="geometry">
               <rect>
                <x>70</x>
-               <y>8</y>
+               <y>7</y>
                <width>160</width>
-               <height>20</height>
+               <height>31</height>
               </rect>
              </property>
              <property name="font">
@@ -909,7 +917,7 @@ Button */
                    <enum>Qt::LeftToRight</enum>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-image: url(:/icons/images/icons/cil-home.png);</string>
+                   <string notr="true">background-image: url(:/icons/images/icons/outline_desktop_windows_white_24dp.png);</string>
                   </property>
                   <property name="text">
                    <string>Network Adapter</string>
@@ -945,7 +953,7 @@ Button */
                    <enum>Qt::LeftToRight</enum>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-image: url(:/icons/images/icons/cil-gamepad.png);</string>
+                   <string notr="true">background-image: url(:/icons/images/icons/baseline_wifi_channel_white_48dp.png);</string>
                   </property>
                   <property name="text">
                    <string>Graph</string>
@@ -981,7 +989,7 @@ Button */
                    <enum>Qt::LeftToRight</enum>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-image: url(:/icons/images/icons/cil-file.png);</string>
+                   <string notr="true">background-image: url(:/icons/images/icons/baseline_router_white_48dp.png);</string>
                   </property>
                   <property name="text">
                    <string>Routes</string>
@@ -1017,7 +1025,7 @@ Button */
                    <enum>Qt::LeftToRight</enum>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-image: url(:/icons/images/icons/cil-save.png)</string>
+                   <string notr="true">background-image: url(:/icons/images/icons/baseline_data_usage_white_48dp.png)</string>
                   </property>
                   <property name="text">
                    <string>Usage</string>
@@ -1053,7 +1061,7 @@ Button */
                    <enum>Qt::LeftToRight</enum>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-image: url(:/icons/images/icons/cil-x.png);</string>
+                   <string notr="true">background-image: url(:/icons/images/icons/outline_sensors_white_48dp.png);</string>
                   </property>
                   <property name="text">
                    <string>User Detection</string>
@@ -2642,7 +2650,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>222</width>
+                                 <width>255</width>
                                  <height>222</height>
                                 </rect>
                                </property>
