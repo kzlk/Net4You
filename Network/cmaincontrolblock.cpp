@@ -23,11 +23,24 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
 
-        // Get the model index for the "IP" item
-        // QModelIndex ipIndex = model->indexFromItem(ipItem.at(1));
+        contextTreeMenu = new CTreeViewContextMenu(ui->treeView_interfaces, adapter);
+        connect(contextTreeMenu, &CTreeViewContextMenu::refreshClicked, [=]() {
+            if (adapter->updateDeviceList())
+            {
 
-        // Update the "Value" field with the new IP address
-        // model->setData(ipIndex, "hello");
+                // auto index = ui->comboBox_interface->currentIndex();
+
+                setupComboBox();
+
+                // setupInterfaceInfo(ui->comboBox_interface->currentIndex());
+                //  setupInterfaceInfo(index);
+                // ui->comboBox_interface->setCurrentIndex(ui->comboBox_interface->currentIndex());
+            }
+            else
+            {
+                qDebug() << "Error at adapter->updateDeviceList() in CMainControlBlock \n";
+            }
+        });
 
         // Connect the networkSpeedChangeg signal to a lambda function
         connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
@@ -41,13 +54,6 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
                 });
 
         speed->setIntervalForUpdatingSpeed(1000);
-
-        // connect(wirelessAdapter, &CWirelessNetworkAdapter::updateRate, [=](int transmit, int receive) {
-        //     QModelIndex transmitIndex = model->indexFromItem(transmitRateItem.at(1));
-        //     QModelIndex receiveIndex = model->indexFromItem(receiveRateItem.at(1));
-        //     model->setData(transmitIndex, QString::number(transmit / 1000) + " Mbps");
-        //     model->setData(receiveIndex, QString::number(receive / 1000) + " Mbps");
-        // });
 
         connect(wirelessAdapter, &CWirelessNetworkAdapter::updateSignalStrength, [=](int signal) {
             QModelIndex signalIndex = model->indexFromItem(signalStreghtItem.at(1));
@@ -63,6 +69,9 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
 void CMainControlBlock::setupInterfaceInfo(int index)
 {
+    if (ui->comboBox_interface->count() == 0)
+        return;
+
     // delete rows for displaying new info
     model->removeRows(0, model->rowCount());
 

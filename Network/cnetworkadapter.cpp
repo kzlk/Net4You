@@ -46,6 +46,7 @@ bool CNetworkAdapter::updateDeviceList()
 
 QMap<int, QString> CNetworkAdapter::getListKeyValueInterface()
 {
+    allInterfaceKeyValue.clear();
     pCurrAddresses = pAddresses;
     while (pCurrAddresses)
     {
@@ -125,7 +126,8 @@ CNetworkAdapter::NetworkProperties CNetworkAdapter::getNetworkProperties(int ind
 
 CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddreses(int indexAdapter)
 {
-
+    //??????
+    adapterAddreses = {};
     getAdapterByIndex(pCurrAddresses, indexAdapter);
     if (pCurrAddresses != nullptr)
     {
@@ -155,11 +157,14 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
 
             // retrive subnet mask
             ULONG out{};
-            ConvertLengthToIpv4Mask(pUnicast->OnLinkPrefixLength, &out);
-            in_addr in{};
-            in.S_un.S_addr = out;
-            inet_ntop(AF_INET, &in, ipAddressStr, INET_ADDRSTRLEN);
-            adapterAddreses.subnetMask = QString::fromLocal8Bit(ipAddressStr);
+            if (pUnicast != nullptr)
+            {
+                ConvertLengthToIpv4Mask(pUnicast->OnLinkPrefixLength, &out);
+                in_addr in{};
+                in.S_un.S_addr = out;
+                inet_ntop(AF_INET, &in, ipAddressStr, INET_ADDRSTRLEN);
+                adapterAddreses.subnetMask = QString::fromLocal8Bit(ipAddressStr);
+            }
         }
 
         // retrive gateway
@@ -195,11 +200,19 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
         if (pCurrAddresses->DdnsEnabled)
         {
             if (pCurrAddresses->DnsSuffix != nullptr)
+            {
                 adapterAddreses.DNSSuffix = QString::fromWCharArray(pCurrAddresses->DnsSuffix);
 
-            address = (struct sockaddr_in *)pCurrAddresses->FirstDnsServerAddress->Address.lpSockaddr;
-            inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
-            adapterAddreses.DNSServers = QString::fromLocal8Bit(ipAddressStr);
+                if (pCurrAddresses->FirstDnsServerAddress != nullptr)
+                {
+                    address = (struct sockaddr_in *)pCurrAddresses->FirstDnsServerAddress->Address.lpSockaddr;
+                    if (address != nullptr)
+                    {
+                        inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+                        adapterAddreses.DNSServers = QString::fromLocal8Bit(ipAddressStr);
+                    }
+                }
+            }
         }
     }
 

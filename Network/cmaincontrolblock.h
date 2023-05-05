@@ -7,7 +7,7 @@
 #include "qstandarditemmodel.h"
 #include "cnetworkadapterspeed.h"
 #include "cwirelessnetworkadapter.h"
-
+#include "ctreeviewcontextmenu.h"
 class CMainControlBlock : public QObject
 {
     Q_OBJECT
@@ -33,6 +33,9 @@ class CMainControlBlock : public QObject
     QList<QStandardItem *> signalStreghtItem{};
     QList<QStandardItem *> transmitRateItem{};
     QList<QStandardItem *> receiveRateItem{};
+
+    //
+    CTreeViewContextMenu *contextTreeMenu{};
 
   public slots:
     void setupInterfaceInfo(int index);

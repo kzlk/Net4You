@@ -39,6 +39,8 @@ CWirelessNetworkAdapter::~CWirelessNetworkAdapter()
         WlanFreeMemory(pConnectInfo);
         pConnectInfo = NULL;
     }
+
+    timer->deleteLater();
 }
 
 bool CWirelessNetworkAdapter::updateWlanProperties()
@@ -190,9 +192,8 @@ bool CWirelessNetworkAdapter::isWlanStateConnected(PWLAN_INTERFACE_INFO &info)
             qDebug("WLAN_CONNECTION_ATTRIBUTES getting successfully\n");
 
             // Get the BSS Entry
-            dwResult =
-                WlanGetNetworkBssList(hClient, &info->InterfaceGuid, &pConnectInfo->wlanAssociationAttributes.dot11Ssid,
-                                      dot11_BSS_type_infrastructure, TRUE, NULL, &pBssList);
+            dwResult = WlanGetNetworkBssList(hClient, &info->InterfaceGuid, NULL, dot11_BSS_type_infrastructure, FALSE,
+                                             NULL, &pBssList);
 
             if (dwResult != ERROR_SUCCESS)
             {
@@ -329,9 +330,8 @@ void CWirelessNetworkAdapter::updateRealTimeValues()
         if (isWlanStateConnected(pIfInfo))
         {
             // Get the BSS Entry
-            dwResult = WlanGetNetworkBssList(hClient, &pIfInfo->InterfaceGuid,
-                                             &pConnectInfo->wlanAssociationAttributes.dot11Ssid,
-                                             dot11_BSS_type_infrastructure, TRUE, NULL, &pBssList);
+            dwResult = WlanGetNetworkBssList(hClient, &pIfInfo->InterfaceGuid, NULL, dot11_BSS_type_infrastructure,
+                                             NULL, NULL, &pBssList);
 
             if (dwResult != ERROR_SUCCESS)
             {
