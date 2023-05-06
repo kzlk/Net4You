@@ -242,6 +242,48 @@ bool CNetworkAdapter::isInterfaceWireless(int index)
     return false;
 }
 
+QString CNetworkAdapter::getFriendlyNameAdapter(int indexAdapter)
+{
+    getAdapterByIndex(pCurrAddresses, indexAdapter);
+    if (pCurrAddresses != nullptr)
+    {
+        return QString::fromStdWString(pCurrAddresses->Description);
+    }
+    return "";
+}
+
+QString CNetworkAdapter::getIPAddress(int indexAdapter)
+{
+    getAdapterByIndex(pCurrAddresses, indexAdapter);
+    if (pCurrAddresses != nullptr)
+    {
+        char ipAddressStr[INET_ADDRSTRLEN]{};
+        sockaddr_in *address{};
+
+        if (pCurrAddresses->Ipv4Enabled)
+        {
+            // retrive ip adress
+            pUnicast = pCurrAddresses->FirstUnicastAddress;
+            if (pUnicast != nullptr)
+            {
+                while (pUnicast)
+                {
+                    // Check if this address is an IPv4 address
+                    if (pUnicast->Address.lpSockaddr->sa_family != AF_INET)
+                    {
+                        pUnicast = pUnicast->Next;
+                        continue;
+                    }
+                    address = (struct sockaddr_in *)pUnicast->Address.lpSockaddr;
+                    inet_ntop(AF_INET, &address->sin_addr, ipAddressStr, INET_ADDRSTRLEN);
+                    return QString::fromLocal8Bit(ipAddressStr);
+                }
+            };
+        }
+    }
+    return "";
+}
+
 void CNetworkAdapter::getAdapterByIndex(PIP_ADAPTER_ADDRESSES &adapter, int &index)
 {
     qDebug() << "Hello from getAdapterByIndex with index" << index << '\n';

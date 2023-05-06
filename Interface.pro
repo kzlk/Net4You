@@ -16,7 +16,8 @@ SOURCES += \
     Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
     Network/cnetworkadapterspeed.cpp \
-    Network/ctreeviewcontextmenu.cpp \
+    Network/croutetable.cpp \
+    Network/cviewcontextmenu.cpp \
     Network/cwirelessnetworkadapter.cpp \
    main.cpp \
      GUI/mainwindow.cpp
@@ -29,7 +30,8 @@ HEADERS += \
      Network/cmaincontrolblock.h \
      Network/cnetworkadapter.h \
      Network/cnetworkadapterspeed.h \
-     Network/ctreeviewcontextmenu.h \
+     Network/croutetable.h \
+     Network/cviewcontextmenu.h \
      Network/cwirelessnetworkadapter.h
 
 FORMS += \

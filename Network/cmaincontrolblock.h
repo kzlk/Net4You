@@ -7,12 +7,16 @@
 #include "qstandarditemmodel.h"
 #include "cnetworkadapterspeed.h"
 #include "cwirelessnetworkadapter.h"
-#include "ctreeviewcontextmenu.h"
+#include "cviewcontextmenu.h"
+#include "croutetable.h"
+
 class CMainControlBlock : public QObject
 {
     Q_OBJECT
   public:
     CMainControlBlock(Ui::MainWindow *main);
+
+    void setupRouteTable();
 
   private:
     void setupComboBox();
@@ -35,7 +39,10 @@ class CMainControlBlock : public QObject
     QList<QStandardItem *> receiveRateItem{};
 
     //
-    CTreeViewContextMenu *contextTreeMenu{};
+    CViewContextMenu *contextTreeMenu{};
+
+    //
+    CRouteTable *routeTable{};
 
   public slots:
     void setupInterfaceInfo(int index);

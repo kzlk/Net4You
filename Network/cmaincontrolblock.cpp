@@ -5,7 +5,9 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
     try
     {
         speed = new CNetworkAdapterSpeed();
+
         adapter = new CNetworkAdapter();
+
         wirelessAdapter = new CWirelessNetworkAdapter();
 
         ui = qMain;
@@ -14,27 +16,25 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         model = new QStandardItemModel();
         // Set the header data for the model
         model->setHorizontalHeaderLabels({"Field", "Value"});
+
+        ui->treeView_interfaces->setSortingEnabled(true);
+
         // Set model for treeView
         ui->treeView_interfaces->setModel(model);
         ui->treeView_interfaces->setColumnWidth(0, 300);
         // Add item to comboBox
         setupComboBox();
 
+        setupRouteTable();
+
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
 
-        contextTreeMenu = new CTreeViewContextMenu(ui->treeView_interfaces, adapter);
-        connect(contextTreeMenu, &CTreeViewContextMenu::refreshClicked, [=]() {
+        contextTreeMenu = new CViewContextMenu(ui->treeView_interfaces, adapter);
+        connect(contextTreeMenu, &CViewContextMenu::refreshClicked, [=]() {
             if (adapter->updateDeviceList())
             {
-
-                // auto index = ui->comboBox_interface->currentIndex();
-
                 setupComboBox();
-
-                // setupInterfaceInfo(ui->comboBox_interface->currentIndex());
-                // setupInterfaceInfo(index);
-                // ui->comboBox_interface->setCurrentIndex(ui->comboBox_interface->currentIndex());
             }
             else
             {
@@ -44,7 +44,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
         // Connect the networkSpeedChangeg signal to a lambda function
         connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
-                [=](int received, int sent, float download, float upload) {
+                [=](uint received, uint sent, float download, float upload) {
                     // Find the "Download Speed" item in the model
                     QModelIndex downloadIndex = model->indexFromItem(downloadedItem.at(1));
                     QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
@@ -65,6 +65,15 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
     {
         qDebug() << bed.what();
     }
+}
+
+void CMainControlBlock::setupRouteTable()
+{
+    routeTable = new CRouteTable(ui->tableView_routes, adapter);
+
+    routeTable->fillTable();
+
+    // routeTable->deleteLater();
 }
 
 void CMainControlBlock::setupInterfaceInfo(int index)

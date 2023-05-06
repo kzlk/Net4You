@@ -39,7 +39,7 @@ class CNetworkAdapterSpeed : public QObject
   signals:
     void networkSpeedChangeg(float download, float upload);
     // void networkBytesReceivedChanged(int received, int sent);
-    void networkBytesReceivedChanged(int received, int sent, float download, float upload);
+    void networkBytesReceivedChanged(uint received, int usent, float download, float upload);
 };
 
 #endif // CNETWORKADAPTERSPEED_H

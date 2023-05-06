@@ -57,6 +57,10 @@ class CNetworkAdapter : public QWidget
     char *getInterfaceGUID(int index);
     bool isInterfaceWireless(int index);
 
+    QString getIpAddr(int indexAdapter);
+    QString getFriendlyNameAdapter(int indexAdapter);
+    QString getIPAddress(int indexAdapter);
+
   private:
     /*TODO - implement caching*/
     static QCache<quint16, PIP_ADAPTER_ADDRESSES> cachedAddresses_;

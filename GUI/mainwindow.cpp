@@ -432,7 +432,7 @@ void MainWindow::buttonClick()
     // SHOW NEW PAGE
     if (btnName == "btn_new")
     {
-        widgets->stackedWidget->setCurrentWidget(widgets->new_page);   // SET PAGE
+        widgets->stackedWidget->setCurrentWidget(widgets->routesPage); // SET PAGE
         MainWindow::resetStyle(btn);                                   // RESET ANOTHERS BUTTONS SELECTED
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet())); // SELECT MENU
     }
