@@ -57,6 +57,8 @@ class CNetworkAdapter : public QWidget
     char *getInterfaceGUID(int index);
     bool isInterfaceWireless(int index);
 
+    QMap<int, QString> getOnlyActiveInterface();
+
     QString getIpAddr(int indexAdapter);
     QString getFriendlyNameAdapter(int indexAdapter);
     QString getIPAddress(int indexAdapter);

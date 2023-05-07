@@ -270,5 +270,7 @@
         <file>images/icons/baseline_wifi_channel_white_48dp.png</file>
         <file>images/icons/outline_sensors_white_48dp.png</file>
         <file>images/icons/outline_desktop_windows_white_24dp.png</file>
+        <file>images/icons/baseline_keyboard_double_arrow_right_white_24dp.png</file>
+        <file>images/icons/baseline_navigate_next_white_24dp.png</file>
     </qresource>
 </RCC>

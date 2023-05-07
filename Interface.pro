@@ -10,12 +10,14 @@ LIBS += -lole32
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000   # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Graph/qchartimage.cpp \
     Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
     Network/cnetworkadapterspeed.cpp \
+    Network/cpaintnetworkgraphic.cpp \
     Network/croutetable.cpp \
     Network/cviewcontextmenu.cpp \
     Network/cwirelessnetworkadapter.cpp \
@@ -27,9 +29,11 @@ HEADERS += \
      GUI/Settings.h \
      GUI/Widget.h \
      GUI/mainwindow.h \
+     Graph/qchartimage.h \
      Network/cmaincontrolblock.h \
      Network/cnetworkadapter.h \
      Network/cnetworkadapterspeed.h \
+     Network/cpaintnetworkgraphic.h \
      Network/croutetable.h \
      Network/cviewcontextmenu.h \
      Network/cwirelessnetworkadapter.h
@@ -37,10 +41,30 @@ HEADERS += \
 FORMS += \
      GUI/main.ui
 
+DEFINES += CHARTDIR_HIDE_OBSOLETE _CRT_SECURE_NO_WARNINGS
+
+CONFIG += warn_off
+
+INCLUDEPATH += ../KURSOVA_SPZ/GraphLibrary/include
+
+
+win32 {
+    contains(QMAKE_HOST.arch, x86_64) {
+        LIBS += ../KURSOVA_SPZ/GraphLibrary/lib64/chartdir70.lib
+        QMAKE_POST_LINK = copy /Y ..\\KURSOVA_SPZ\\GraphLibrary\\lib64\\chartdir70.dll $(DESTDIR)
+    } else {
+        LIBS += ../KURSOVA_SPZ/GraphLibrary/lib32/chartdir70.lib
+        QMAKE_POST_LINK = copy /Y ..\\KURSOVA_SPZ\\GraphLibrary\\lib32\\chartdir70.dll $(DESTDIR)
+    }
+}
+
+RESOURCES += \
+    resources.qrc
+
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += \
-    resources.qrc
+

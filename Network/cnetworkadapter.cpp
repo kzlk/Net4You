@@ -242,6 +242,31 @@ bool CNetworkAdapter::isInterfaceWireless(int index)
     return false;
 }
 
+QMap<int, QString> CNetworkAdapter::getOnlyActiveInterface()
+{
+    allInterfaceKeyValue.clear();
+    pCurrAddresses = pAddresses;
+    while (pCurrAddresses)
+    {
+        if (pCurrAddresses->IfType == IF_TYPE_SOFTWARE_LOOPBACK)
+        {
+            pCurrAddresses = pCurrAddresses->Next;
+            continue;
+        }
+        else if (pCurrAddresses->OperStatus == IfOperStatusUp)
+        {
+            allInterfaceKeyValue.insert(pCurrAddresses->IfIndex, QString::fromStdWString(pCurrAddresses->Description));
+            pCurrAddresses = pCurrAddresses->Next;
+        }
+        else
+        {
+            pCurrAddresses = pCurrAddresses->Next;
+            continue;
+        }
+    }
+    return allInterfaceKeyValue;
+}
+
 QString CNetworkAdapter::getFriendlyNameAdapter(int indexAdapter)
 {
     getAdapterByIndex(pCurrAddresses, indexAdapter);

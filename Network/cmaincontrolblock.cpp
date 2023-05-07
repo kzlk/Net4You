@@ -1,4 +1,5 @@
 #include "cmaincontrolblock.h"
+#include "Network/cpaintnetworkgraphic.h"
 
 CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 {
@@ -11,6 +12,8 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         wirelessAdapter = new CWirelessNetworkAdapter();
 
         ui = qMain;
+
+        CPaintNetworkGraphic *graph = new CPaintNetworkGraphic(qMain, speed, adapter);
 
         // Create a QStandardItemModel to hold the data
         model = new QStandardItemModel();
@@ -48,6 +51,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
                     // Find the "Download Speed" item in the model
                     QModelIndex downloadIndex = model->indexFromItem(downloadedItem.at(1));
                     QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
+
                     // Update the "Value" field with the new download speed
                     model->setData(downloadIndex, QString::number(received) + " - " + speed->convertSpeed(download));
                     model->setData(uploadIndex, QString::number(sent) + " - " + speed->convertSpeed(upload));
@@ -214,9 +218,7 @@ void CMainControlBlock::setupComboBox()
     QMap<int, QString> interfaceList = adapter->getListKeyValueInterface();
 
     for (auto it = interfaceList.constBegin(); it != interfaceList.constEnd(); ++it)
-    {
         ui->comboBox_interface->addItem(it.value(), QVariant(it.key()));
-    }
 }
 
 QList<QStandardItem *> CMainControlBlock::createStandardItemList(QString name, QString value, QIcon icon)

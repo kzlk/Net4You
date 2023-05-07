@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QTimer>
 #include <qapplication.h>
-
+#include <QButtonGroup>
 #include "ui_main.h"
 bool GLOBAL_STATE = false;
 bool GLOBAL_TITLE_BAR = true;
@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // SET CUSTOM THEME
     bool useCustomTheme = false;
-    QString themeFile = "E:/Developer_Project/C++/QT/KURSOVA_SPZ/themes/py_dracula_light.qss";
+    QString themeFile = "E:/Developer_Project/C++/QT/KURSOVA_SPZ/themes/py_dracula_dark.qss";
 
     // SET THEME AND HACKS
     if (useCustomTheme)
@@ -100,20 +100,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     /*Main control block for control the functions with network*/
     controlBlock = new CMainControlBlock(ui);
-
-    //                              QStandardItemModel* item = new
-    //                              QStandardItemModel(20,20, this);
-    //                              ui->tableView_interfaces->setModel(item);
-    //                              QModelIndex index{};
-    //                              for(int i = 0; i < 10; i++)
-    //                              {
-    //                                  for(int j = 0; j < 10; j++)
-    //                                  {
-    //                                      index = item->index(i, j );
-    //                                      item->setData(index, 2);
-    //                                  }
-    //                              }
-    //                              ui->tableView_interfaces->verticalHeader()->hide();
 }
 
 MainWindow::~MainWindow()
@@ -193,6 +179,19 @@ void MainWindow::toggleMenu(bool enable)
 // ///////////////////////////////////////////////////////////////
 void MainWindow::toggleLeftBox(bool enable)
 {
+    // // Get a pointer to the layout of the frame
+    // QBoxLayout *frameLayout = qobject_cast<QBoxLayout *>(ui->extraTopMenu->layout());
+
+    // // Remove all the widgets from the layout
+    // QLayoutItem *child;
+    // while ((child = frameLayout->takeAt(0)) != nullptr)
+    // {
+    //     delete child->widget();
+    //     delete child;
+    // }
+
+    //  frameLayout->addWidget(new QPushButton("My push"));
+
     if (enable)
     {
         // GET WIDTH
@@ -424,7 +423,7 @@ void MainWindow::buttonClick()
     // SHOW WIDGETS PAGE
     if (btnName == "btn_widgets")
     {
-        widgets->stackedWidget->setCurrentWidget(widgets->widgets);
+        widgets->stackedWidget->setCurrentWidget(widgets->graphPage);
         MainWindow::resetStyle(btn);
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet()));
     }
