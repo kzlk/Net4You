@@ -95,6 +95,19 @@ QString CNetworkAdapterSpeed::convertSpeed(float speed)
     }
 }
 
+float CNetworkAdapterSpeed::convert(float &bytes, SPEED_MEASURE speed)
+{
+    switch (speed)
+    {
+    case SPEED_MEASURE::KILOBIT:
+        return bytes * 8 / 1000;
+    case SPEED_MEASURE::MEGABIT:
+        return bytes * 8 / pow(10, 6);
+    default:
+        return bytes;
+    }
+}
+
 void CNetworkAdapterSpeed::updateSpeed()
 {
     DWORD Size = sizeof(MIB_IFTABLE);

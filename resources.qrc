@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/images">
-        <file>images/images/PyDracula.png</file>
-        <file>images/images/PyDracula_vertical.png</file>
         <file>images/images/logo.png</file>
         <file>images/images/logo2.png</file>
         <file>images/images/logo4.png</file>
@@ -272,5 +270,8 @@
         <file>images/icons/outline_desktop_windows_white_24dp.png</file>
         <file>images/icons/baseline_keyboard_double_arrow_right_white_24dp.png</file>
         <file>images/icons/baseline_navigate_next_white_24dp.png</file>
+        <file>images/icons/baseline_clear_white_24dp.png</file>
+        <file>images/icons/baseline_play_arrow_white_24dp.png</file>
+        <file>images/icons/baseline_stop_white_24dp.png</file>
     </qresource>
 </RCC>

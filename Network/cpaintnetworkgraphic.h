@@ -41,7 +41,10 @@ class CPaintNetworkGraphic : public QWidget
     QLabel *m_ValueB; // Label to display the realtime value B
     QLabel *m_ValueC; // Label to display the realtime value C
 
-    QButtonGroup *mouseUsage;    // Mouse usage buttons
+    QButtonGroup *mouseUsage; // Mouse usage buttons
+
+    QButtonGroup *startStopUsage;
+
     QChartViewer *m_ChartViewer; // QChartViewer control
     QComboBox *updatePeriod;     // The chart update rate
     QTimer *m_ChartUpdateTimer;  // The chart update timer
@@ -51,8 +54,7 @@ class CPaintNetworkGraphic : public QWidget
     void trackLineLabel(XYChart *c, int mouseX); // Draw track cursor
     void updateControls(QChartViewer *viewer);   // Update other controls as viewport changes
 
-    void setupComboBox();
-    void updateComboBoxValue();
+    void setupComboBox(); // Set up combobox for active adapter
 
   private slots:
     void onMouseUsageChanged(QAbstractButton *b); // Pointer/zoom in/zoom out button clicked
@@ -63,6 +65,9 @@ class CPaintNetworkGraphic : public QWidget
     void onChartUpdateTimer();                    // Update the chart.
     void onViewPortChanged();                     // Viewport has changed
     void onHScrollBarChanged(int value);          // Scrollbar changed
+
+    void updateComboBoxValue(int index);                                      // Update
+    void updateSpeed(uint received, uint sent, float download, float upload); // Update speed from CNetworkAdapter
 };
 
 #endif // CPAINTNETWORKGRAPHIC_H

@@ -1345,9 +1345,9 @@ Button */
               </rect>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
-             <widget class="QWidget" name="page_3"/>
+             <widget class="QWidget" name="page_empty"/>
              <widget class="QWidget" name="page_leftbox_graph">
               <widget class="QFrame" name="extraTopMenu">
                <property name="geometry">
@@ -1415,7 +1415,9 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-share-boxed.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/cil-zoom-in.png)
+
+</string>
                  </property>
                  <property name="text">
                   <string>Zoom In</string>
@@ -1457,7 +1459,9 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-equalizer.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/cil-zoom-out.png)
+
+</string>
                  </property>
                  <property name="text">
                   <string>Zoom Out</string>
@@ -1499,7 +1503,7 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-layers.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/cil-ethernet.png)</string>
                  </property>
                  <property name="text">
                   <string>Scroll</string>
@@ -1557,7 +1561,9 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-share-boxed.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/cil-data-transfer-down.png)
+
+</string>
                  </property>
                  <property name="text">
                   <string>Save</string>
@@ -1594,12 +1600,12 @@ Button */
                   <rect>
                    <x>12</x>
                    <y>12</y>
-                   <width>153</width>
+                   <width>221</width>
                    <height>33</height>
                   </rect>
                  </property>
                  <property name="text">
-                  <string>Update period</string>
+                  <string>Update period (ms)</string>
                  </property>
                 </widget>
                </widget>
@@ -1654,7 +1660,9 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-equalizer.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/baseline_stop_white_24dp.png)
+
+</string>
                  </property>
                  <property name="text">
                   <string>Pause</string>
@@ -1696,10 +1704,57 @@ Button */
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">background-image: url(:/icons/images/icons/cil-share-boxed.png);</string>
+                  <string notr="true">background-image: url(:/icons/images/icons/baseline_play_arrow_white_24dp.png)
+</string>
                  </property>
                  <property name="text">
                   <string>Run</string>
+                 </property>
+                </widget>
+                <widget class="QPushButton" name="btn_clear_graph">
+                 <property name="geometry">
+                  <rect>
+                   <x>1</x>
+                   <y>102</y>
+                   <width>230</width>
+                   <height>45</height>
+                  </rect>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>45</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Comic Sans MS</family>
+                   <pointsize>14</pointsize>
+                   <italic>false</italic>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+
+background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
+
+</string>
+                 </property>
+                 <property name="text">
+                  <string>Clear</string>
                  </property>
                 </widget>
                </widget>

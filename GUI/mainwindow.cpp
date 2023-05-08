@@ -416,14 +416,17 @@ void MainWindow::buttonClick()
     if (btnName == "btn_home")
     {
         widgets->stackedWidget->setCurrentWidget(widgets->home);
+        widgets->stackedWidget_2->setCurrentWidget(widgets->page_empty);
         MainWindow::resetStyle(btn);
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet()));
+        controlBlock->setupInterfaceInfo(ui->comboBox_interface->currentIndex());
     }
 
     // SHOW WIDGETS PAGE
     if (btnName == "btn_widgets")
     {
         widgets->stackedWidget->setCurrentWidget(widgets->graphPage);
+        widgets->stackedWidget_2->setCurrentWidget(widgets->page_leftbox_graph);
         MainWindow::resetStyle(btn);
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet()));
     }
@@ -431,6 +434,7 @@ void MainWindow::buttonClick()
     // SHOW NEW PAGE
     if (btnName == "btn_new")
     {
+        widgets->stackedWidget_2->setCurrentWidget(widgets->page_empty);
         widgets->stackedWidget->setCurrentWidget(widgets->routesPage); // SET PAGE
         MainWindow::resetStyle(btn);                                   // RESET ANOTHERS BUTTONS SELECTED
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet())); // SELECT MENU

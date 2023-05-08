@@ -219,6 +219,17 @@ CNetworkAdapter::NetworkAdapterAddreses CNetworkAdapter::getNetworkAdapterAddres
     return adapterAddreses;
 }
 
+BYTE *CNetworkAdapter::getRowHardwareAddr(int index)
+{
+    getAdapterByIndex(pCurrAddresses, index);
+
+    if (pCurrAddresses->PhysicalAddressLength != 0)
+    {
+        return pCurrAddresses->PhysicalAddress;
+    }
+    return nullptr;
+}
+
 PIP_ADAPTER_ADDRESSES CNetworkAdapter::getInterface(int index)
 {
     getAdapterByIndex(pCurrAddresses, index);
@@ -251,7 +262,7 @@ QMap<int, QString> CNetworkAdapter::getOnlyActiveInterface()
         if (pCurrAddresses->IfType == IF_TYPE_SOFTWARE_LOOPBACK)
         {
             pCurrAddresses = pCurrAddresses->Next;
-            continue;
+            // continue;
         }
         else if (pCurrAddresses->OperStatus == IfOperStatusUp)
         {
@@ -261,7 +272,7 @@ QMap<int, QString> CNetworkAdapter::getOnlyActiveInterface()
         else
         {
             pCurrAddresses = pCurrAddresses->Next;
-            continue;
+            // continue;
         }
     }
     return allInterfaceKeyValue;

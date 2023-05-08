@@ -8,11 +8,9 @@
 #include <vector>
 #include <sstream>
 
-
 static const int DataInterval = 250;
 
-RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) :
-    QDialog(parent)
+RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) : QDialog(parent)
 {
     //
     // Set up the GUI
@@ -37,12 +35,6 @@ RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) :
     zoomInPB->setStyleSheet("QPushButton { text-align:left; padding:5px}");
     zoomInPB->setCheckable(true);
 
-
-    QPushButton *zoomIn = new QPushButton(QIcon(":/icons/zoomin_icon.png"), "Zoom In", frame);
-    zoomInPB->setGeometry(4, 36, 112, 28);
-    zoomInPB->setStyleSheet("QPushButton { text-align:left; padding:5px}");
-    zoomInPB->setCheckable(true);
-
     // Zoom Out push button
     QPushButton *zoomOutPB = new QPushButton(QIcon(":/icons/zoomout_icon.png"), "Zoom Out", frame);
     zoomOutPB->setGeometry(4, 64, 112, 28);
@@ -60,15 +52,20 @@ RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) :
     mouseUsage->addButton(pointerPB, Chart::MouseUsageScroll);
     mouseUsage->addButton(zoomInPB, Chart::MouseUsageZoomIn);
     mouseUsage->addButton(zoomOutPB, Chart::MouseUsageZoomOut);
-    connect(mouseUsage, SIGNAL(buttonPressed(QAbstractButton*)),
-        SLOT(onMouseUsageChanged(QAbstractButton*)));
+    connect(mouseUsage, SIGNAL(buttonPressed(QAbstractButton *)), SLOT(onMouseUsageChanged(QAbstractButton *)));
 
     // Update Period drop down list box
     (new QLabel("Update Period (ms)", frame))->setGeometry(6, 180, 108, 16);
     updatePeriod = new QComboBox(frame);
     updatePeriod->setGeometry(6, 200, 108, 21);
-    updatePeriod->addItems(QStringList() << "250" << "500" << "750" << "1000" << "1250" << "1500"
-                           << "1750" << "2000");
+    updatePeriod->addItems(QStringList() << "250"
+                                         << "500"
+                                         << "750"
+                                         << "1000"
+                                         << "1250"
+                                         << "1500"
+                                         << "1750"
+                                         << "2000");
     connect(updatePeriod, SIGNAL(currentIndexChanged(int)), SLOT(onUpdatePeriodChanged(int)));
 
     // Alpha Value display
@@ -93,8 +90,7 @@ RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) :
     m_ChartViewer = new QChartViewer(this);
     m_ChartViewer->setGeometry(128, 4, 640, 350);
     connect(m_ChartViewer, SIGNAL(viewPortChanged()), SLOT(onViewPortChanged()));
-    connect(m_ChartViewer, SIGNAL(mouseMovePlotArea(QMouseEvent*)),
-        SLOT(onMouseMovePlotArea(QMouseEvent*)));
+    connect(m_ChartViewer, SIGNAL(mouseMovePlotArea(QMouseEvent *)), SLOT(onMouseMovePlotArea(QMouseEvent *)));
 
     // Horizontal scroll bar
     m_HScrollBar = new QScrollBar(Qt::Horizontal, this);
@@ -132,7 +128,7 @@ RealTimeZoomScroll::RealTimeZoomScroll(QWidget *parent) :
 
 RealTimeZoomScroll::~RealTimeZoomScroll()
 {
-    delete m_ChartViewer->getChart();   
+    delete m_ChartViewer->getChart();
 }
 
 //
@@ -148,8 +144,9 @@ void RealTimeZoomScroll::onMouseUsageChanged(QAbstractButton *b)
 //
 void RealTimeZoomScroll::onSave(bool)
 {
-    QString fileName = QFileDialog::getSaveFileName(this, "Save", "chartdirector_demo",
-        "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
+    QString fileName =
+        QFileDialog::getSaveFileName(this, "Save", "chartdirector_demo",
+                                     "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
 
     if (!fileName.isEmpty())
     {
@@ -194,7 +191,7 @@ void RealTimeZoomScroll::onDataTimer()
         {
             m_currentIndex = sampleSize * 95 / 100 - 1;
 
-            for(int i = 0; i < m_currentIndex; ++i)
+            for (int i = 0; i < m_currentIndex; ++i)
             {
                 int srcIndex = i + sampleSize - m_currentIndex;
                 m_timeStamps[i] = m_timeStamps[srcIndex];
@@ -212,8 +209,7 @@ void RealTimeZoomScroll::onDataTimer()
         ++m_currentIndex;
 
         m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
-    }
-    while (m_nextDataTime < now);
+    } while (m_nextDataTime < now);
 
     //
     // We provide some visual feedback to the latest numbers generated, so you can see the
@@ -253,8 +249,8 @@ void RealTimeZoomScroll::onChartUpdateTimer()
         bool scaleHasChanged = m_ChartViewer->updateFullRangeH("x", startDate, endDate, updateType);
 
         // Set the zoom in limit as a ratio to the full range
-        m_ChartViewer->setZoomInWidthLimit(zoomInLimit / (m_ChartViewer->getValueAtViewPort("x", 1) -
-            m_ChartViewer->getValueAtViewPort("x", 0)));
+        m_ChartViewer->setZoomInWidthLimit(
+            zoomInLimit / (m_ChartViewer->getValueAtViewPort("x", 1) - m_ChartViewer->getValueAtViewPort("x", 0)));
 
         // Trigger the viewPortChanged event to update the display if the axis scale has changed
         // or if new data are added to the existing axis scale.
@@ -318,8 +314,7 @@ void RealTimeZoomScroll::drawChart(QChartViewer *viewer)
 {
     // Get the start date and end date that are visible on the chart.
     double viewPortStartDate = viewer->getValueAtViewPort("x", viewer->getViewPortLeft());
-    double viewPortEndDate = viewer->getValueAtViewPort("x", viewer->getViewPortLeft() +
-        viewer->getViewPortWidth());
+    double viewPortEndDate = viewer->getValueAtViewPort("x", viewer->getViewPortLeft() + viewer->getViewPortWidth());
 
     // Extract the part of the data arrays that are visible.
     DoubleArray viewPortTimeStamps;
@@ -335,7 +330,7 @@ void RealTimeZoomScroll::drawChart(QChartViewer *viewer)
         int noOfPoints = endIndex - startIndex + 1;
 
         // Extract the visible data
-        viewPortTimeStamps = DoubleArray(m_timeStamps+ startIndex, noOfPoints);
+        viewPortTimeStamps = DoubleArray(m_timeStamps + startIndex, noOfPoints);
         viewPortDataSeriesA = DoubleArray(m_dataSeriesA + startIndex, noOfPoints);
         viewPortDataSeriesB = DoubleArray(m_dataSeriesB + startIndex, noOfPoints);
         viewPortDataSeriesC = DoubleArray(m_dataSeriesC + startIndex, noOfPoints);
@@ -355,8 +350,9 @@ void RealTimeZoomScroll::drawChart(QChartViewer *viewer)
     // Set the plotarea at (55, 50) with width 80 pixels less than chart width, and height 80 pixels
     // less than chart height. Use a vertical gradient from light blue (f0f6ff) to sky blue (a0c0ff)
     // as background. Set border to transparent and grid lines to white (ffffff).
-    c->setPlotArea(55, 50, c->getWidth() - 85, c->getHeight() - 80, c->linearGradientColor(0, 50, 0,
-        c->getHeight() - 35, 0xf0f6ff, 0xa0c0ff), -1, Chart::Transparent, 0xffffff, 0xffffff);
+    c->setPlotArea(55, 50, c->getWidth() - 85, c->getHeight() - 80,
+                   c->linearGradientColor(0, 50, 0, c->getHeight() - 35, 0xf0f6ff, 0xa0c0ff), -1, Chart::Transparent,
+                   0xffffff, 0xffffff);
 
     // As the data can lie outside the plotarea in a zoomed chart, we need enable clipping.
     c->setClipping();
@@ -424,7 +420,7 @@ void RealTimeZoomScroll::drawChart(QChartViewer *viewer)
     // the Day, and "hh:nn" for other labels.
     c->xAxis()->setFormatCondition("align", 3600);
     c->xAxis()->setMultiFormat(Chart::StartOfDayFilter(), "<*font=bold*>{value|hh:nn<*br*>mmm dd}",
-        Chart::AllPassFilter(), "{value|hh:nn}");
+                               Chart::AllPassFilter(), "{value|hh:nn}");
 
     // If all ticks are minute algined, then we use "hh:nn" as the label format.
     c->xAxis()->setFormatCondition("align", 60);
@@ -441,13 +437,12 @@ void RealTimeZoomScroll::drawChart(QChartViewer *viewer)
     // Output the chart
     //================================================================================
 
-    // We need to update the track line too. If the mouse is moving on the chart (eg. if 
+    // We need to update the track line too. If the mouse is moving on the chart (eg. if
     // the user drags the mouse on the chart to scroll it), the track line will be updated
     // in the MouseMovePlotArea event. Otherwise, we need to update the track line here.
     if (!viewer->isInMouseMoveEvent())
     {
-        trackLineLabel(c, (0 == viewer->getChart()) ? c->getPlotArea()->getRightX() :
-            viewer->getPlotAreaMouseX()); 
+        trackLineLabel(c, (0 == viewer->getChart()) ? c->getPlotArea()->getRightX() : viewer->getPlotAreaMouseX());
     }
 
     // Set the chart image to the QChartViewer
@@ -486,8 +481,7 @@ void RealTimeZoomScroll::trackLineLabel(XYChart *c, int mouseX)
 
     // Draw a label on the x-axis to show the track line position.
     std::ostringstream xlabel;
-    xlabel << "<*font,bgColor=000000*> " << c->xAxis()->getFormattedLabel(xValue, "hh:nn:ss.ff")
-        << " <*/font*>";
+    xlabel << "<*font,bgColor=000000*> " << c->xAxis()->getFormattedLabel(xValue, "hh:nn:ss.ff") << " <*/font*>";
     TTFText *t = d->text(xlabel.str().c_str(), "Arial Bold", 10);
 
     // Restrict the x-pixel position of the label to make sure it stays inside the chart image.
@@ -496,7 +490,8 @@ void RealTimeZoomScroll::trackLineLabel(XYChart *c, int mouseX)
     t->destroy();
 
     // Iterate through all layers to draw the data labels
-    for (int i = 0; i < c->getLayerCount(); ++i) {
+    for (int i = 0; i < c->getLayerCount(); ++i)
+    {
         Layer *layer = c->getLayerByZ(i);
 
         // The data array index of the x-value
@@ -513,14 +508,14 @@ void RealTimeZoomScroll::trackLineLabel(XYChart *c, int mouseX)
             int yCoor = c->getYCoor(dataSet->getPosition(xIndex), dataSet->getUseYAxis());
 
             // Draw a track dot with a label next to it for visible data points in the plot area
-            if ((yCoor >= plotArea->getTopY()) && (yCoor <= plotArea->getBottomY()) && (color !=
-                Chart::Transparent) && dataSetName && *dataSetName)
+            if ((yCoor >= plotArea->getTopY()) && (yCoor <= plotArea->getBottomY()) && (color != Chart::Transparent) &&
+                dataSetName && *dataSetName)
             {
                 d->circle(xCoor, yCoor, 4, 4, color, color);
 
                 std::ostringstream label;
                 label << "<*font,bgColor=" << std::hex << color << "*> "
-                    << c->formatValue(dataSet->getValue(xIndex), "{value|P4}") << " <*font*>";
+                      << c->formatValue(dataSet->getValue(xIndex), "{value|P4}") << " <*font*>";
                 t = d->text(label.str().c_str(), "Arial Bold", 10);
 
                 // Draw the label on the right side of the dot if the mouse is on the left side the
@@ -535,4 +530,3 @@ void RealTimeZoomScroll::trackLineLabel(XYChart *c, int mouseX)
         }
     }
 }
-

@@ -18,6 +18,15 @@ class CNetworkAdapterSpeed : public QObject
     void setIntervalForUpdatingSpeed(int interval);
     QString convertSpeed(float speed);
 
+    enum class SPEED_MEASURE
+    {
+        KILOBIT,
+        MEGABIT,
+        DEFAULT
+    };
+
+    float convert(float &bytes, SPEED_MEASURE speed = SPEED_MEASURE::KILOBIT);
+
   private:
     int adapterIndex{};
     QTimer *timer{};

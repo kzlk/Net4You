@@ -1,5 +1,4 @@
 #include "cmaincontrolblock.h"
-#include "Network/cpaintnetworkgraphic.h"
 
 CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 {
@@ -13,27 +12,32 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
         ui = qMain;
 
-        CPaintNetworkGraphic *graph = new CPaintNetworkGraphic(qMain, speed, adapter);
+        graph = new CPaintNetworkGraphic(qMain, speed, adapter);
 
         // Create a QStandardItemModel to hold the data
         model = new QStandardItemModel();
         // Set the header data for the model
         model->setHorizontalHeaderLabels({"Field", "Value"});
 
-        ui->treeView_interfaces->setSortingEnabled(true);
-
         // Set model for treeView
         ui->treeView_interfaces->setModel(model);
+        // Set column width for first (0) column
         ui->treeView_interfaces->setColumnWidth(0, 300);
-        // Add item to comboBox
+        // Enable sorting for treeView
+        ui->treeView_interfaces->setSortingEnabled(true);
+
+        // Add item to comboBox for main window
         setupComboBox();
 
+        // Setup route table window
         setupRouteTable();
 
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
 
         contextTreeMenu = new CViewContextMenu(ui->treeView_interfaces, adapter);
+
+        // Refresh in context menu in main window
         connect(contextTreeMenu, &CViewContextMenu::refreshClicked, [=]() {
             if (adapter->updateDeviceList())
             {
@@ -59,6 +63,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 
         speed->setIntervalForUpdatingSpeed(1000);
 
+        // Realtime updating dBm (signal WiFi strength)
         connect(wirelessAdapter, &CWirelessNetworkAdapter::updateSignalStrength, [=](int signal) {
             QModelIndex signalIndex = model->indexFromItem(signalStreghtItem.at(1));
             model->setData(signalIndex,

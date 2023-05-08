@@ -14,14 +14,52 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
     this->adapter = adapter;
     this->speed = speed;
 
+    my->frame_5->setFrameShape(QFrame::StyledPanel);
+
     updatePeriod = qMain->comboBox_period;
     m_HScrollBar = qMain->horizontalScrollBar_2;
+
     // The Pointer/Zoom In/Zoom Out buttons form a button group
     mouseUsage = new QButtonGroup();
     mouseUsage->addButton(qMain->btn_scroll, Chart::MouseUsageScroll);
     mouseUsage->addButton(qMain->btn_zoom_in, Chart::MouseUsageZoomIn);
     mouseUsage->addButton(qMain->btn_zoom_out, Chart::MouseUsageZoomOut);
     connect(mouseUsage, SIGNAL(buttonPressed(QAbstractButton *)), SLOT(onMouseUsageChanged(QAbstractButton *)));
+
+    startStopUsage = new QButtonGroup();
+    startStopUsage->addButton(qMain->btn_run_graph, 1);
+    startStopUsage->addButton(qMain->btn_pause_graph, 0);
+    startStopUsage->addButton(qMain->btn_clear_graph, 2);
+
+    connect(startStopUsage, &QButtonGroup::buttonPressed, [=](QAbstractButton *b) {
+        if (startStopUsage->id(b) == 1)
+        {
+            connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
+                    &CPaintNetworkGraphic::updateSpeed);
+            m_ChartUpdateTimer->start();
+        }
+
+        else if (startStopUsage->id(b) == 0)
+        {
+            disconnect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
+                       &CPaintNetworkGraphic::updateSpeed);
+            m_ChartUpdateTimer->stop();
+        }
+        else if (startStopUsage->id(b) == 2)
+        {
+            for (int i = 0; i < sampleSize; i++)
+            {
+                m_timeStamps[i] = 0.0;
+                m_dataSeriesA[i] = 0.0;
+                m_dataSeriesB[i] = 0.0;
+                m_dataSeriesC[i] = 0.0;
+            }
+
+            m_currentIndex = 0;
+
+            m_ChartViewer->clearAllRanges();
+        }
+    });
 
     qMain->comboBox_period->addItems(QStringList() << "250"
                                                    << "500"
@@ -31,6 +69,8 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
                                                    << "1500"
                                                    << "1750"
                                                    << "2000");
+
+    qMain->comboBox_period->setCurrentIndex(3);
 
     connect(qMain->comboBox_period, SIGNAL(currentIndexChanged(int)), SLOT(onUpdatePeriodChanged(int)));
 
@@ -81,63 +121,79 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
     // Enable mouse wheel zooming by setting the zoom ratio to 1.1 per wheel event
     m_ChartViewer->setMouseWheelZoomRatio(1.1);
 
+    // Combobox index updating
+    setupComboBox();
+    connect(qMain->comboBox_interface_2, &QComboBox::currentIndexChanged, this,
+            &CPaintNetworkGraphic::updateComboBoxValue);
+
+    // connect(qMain->comboBox_interface_2, &QComboBox::highlighted, [=](int index) {
+    //     adapter->updateDeviceList();
+    //     setupComboBox();
+    // });
+
+    // updateComboBoxValue(my->comboBox_interface_2->currentIndex());
+
+    // Updating speed
+    connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this, &CPaintNetworkGraphic::updateSpeed);
+    speed->setIntervalForUpdatingSpeed(DataInterval);
+
     // Set up the data acquisition mechanism. In this demo, we just use a timer to get a
     // sample every 250ms.
-    QTimer *dataRateTimer = new QTimer(this);
-    dataRateTimer->start(DataInterval);
-    connect(dataRateTimer, SIGNAL(timeout()), SLOT(onDataTimer()));
+    // QTimer *dataRateTimer = new QTimer(this);
+    // dataRateTimer->start(DataInterval);
+    // connect(dataRateTimer, SIGNAL(timeout()), SLOT(onDataTimer()));
 
-    // Connect the networkSpeedChangeg signal to a lambda function
-    connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
-            [=](uint received, uint sent, float download, float upload) {
-                // Find the "Download Speed" item in the model
+    //    // Connect the networkSpeedChangeg signal to a lambda function
+    //    connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
+    //            [=](uint received, uint sent, float download, float upload) {
+    //                // Find the "Download Speed" item in the model
 
-                // The current time
-                QDateTime now = QDateTime::currentDateTime();
-                // This is our formula for the random number generator
-                do
-                {
-                    // We need the currentTime in millisecond resolution
-                    qint64 t = m_nextDataTime.toMSecsSinceEpoch();
-                    double currentTime = Chart::chartTime2((int)(t / 1000)) + (t % 1000) / 250 * 0.25;
+    //                // The current time
+    //                QDateTime now = QDateTime::currentDateTime();
+    //                // This is our formula for the random number generator
+    //                do
+    //                {
+    //                   // We need the currentTime in millisecond resolution
+    //                    qint64 t = m_nextDataTime.toMSecsSinceEpoch();
+    //                    double currentTime = Chart::chartTime2((int)(t / 1000)) + (t % 1000) / 250 * 0.25;
 
-                    // Get a data sample
-                    double p = currentTime * 4;
-                    double dataA = download;
-                    double dataB = upload;
-                    // double dataC = 150 + 100 * cos(p / 6.7) * cos(p / 11.9);
+    //                    // Get a data sample
+    //                    double p = currentTime * 4;
+    //                    double dataA = download;
+    //                    double dataB = upload;
+    //                    // double dataC = 150 + 100 * cos(p / 6.7) * cos(p / 11.9);
 
-                    // In this demo, if the data arrays are full, the oldest 5% of data are discarded.
-                    if (m_currentIndex >= sampleSize)
-                    {
-                        m_currentIndex = sampleSize * 95 / 100 - 1;
+    //                    // In this demo, if the data arrays are full, the oldest 5% of data are discarded.
+    //                    if (m_currentIndex >= sampleSize)
+    //                    {
+    //                        m_currentIndex = sampleSize * 95 / 100 - 1;
 
-                        for (int i = 0; i < m_currentIndex; ++i)
-                        {
-                            int srcIndex = i + sampleSize - m_currentIndex;
-                            m_timeStamps[i] = m_timeStamps[srcIndex];
-                            m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
-                            m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
-                            // m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
-                        }
-                    }
+    //                        for (int i = 0; i < m_currentIndex; ++i)
+    //                        {
+    //                            int srcIndex = i + sampleSize - m_currentIndex;
+    //                            m_timeStamps[i] = m_timeStamps[srcIndex];
+    //                            m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
+    //                            m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
+    //                            // m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
+    //                        }
+    //                    }
 
-                    // Store the new values in the current index position, and increment the index.
-                    m_timeStamps[m_currentIndex] = currentTime;
-                    m_dataSeriesA[m_currentIndex] = dataA;
-                    m_dataSeriesB[m_currentIndex] = dataB;
-                    // m_dataSeriesC[m_currentIndex] = dataC;
-                    ++m_currentIndex;
+    //                    // Store the new values in the current index position, and increment the index.
+    //                    m_timeStamps[m_currentIndex] = currentTime;
+    //                    m_dataSeriesA[m_currentIndex] = dataA;
+    //                    m_dataSeriesB[m_currentIndex] = dataB;
+    //                    // m_dataSeriesC[m_currentIndex] = dataC;
+    //                    ++m_currentIndex;
 
-                    m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
-                } while (m_nextDataTime < now);
+    //                    m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
+    //                } while (m_nextDataTime < now);
 
-                // m_ValueA->setText(speed->convertSpeed(download));
-                // m_ValueB->setText(speed->convertSpeed(upload));
+    //                // m_ValueA->setText(speed->convertSpeed(download));
+    //                // m_ValueB->setText(speed->convertSpeed(upload));
 
-                // m_ValueA->setText(QString::number(download));
-                // m_ValueB->setText(QString::number(upload));
-            });
+    //                // m_ValueA->setText(QString::number(download));
+    //                // m_ValueB->setText(QString::number(upload));
+    //            });
 
     // Set up the chart update timer
     m_ChartUpdateTimer = new QTimer(this);
@@ -167,9 +223,8 @@ void CPaintNetworkGraphic::onMouseUsageChanged(QAbstractButton *b)
 //
 void CPaintNetworkGraphic::onSave(bool)
 {
-    QString fileName =
-        QFileDialog::getSaveFileName(this, "Save", "chartdirector_demo",
-                                     "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
+    QString fileName = QFileDialog::getSaveFileName(
+        this, "Save", "network_chart", "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
 
     if (!fileName.isEmpty())
     {
@@ -186,6 +241,7 @@ void CPaintNetworkGraphic::onSave(bool)
 void CPaintNetworkGraphic::onUpdatePeriodChanged(int)
 {
     m_ChartUpdateTimer->start(updatePeriod->currentText().toInt());
+    speed->setIntervalForUpdatingSpeed(updatePeriod->currentText().toInt());
 }
 
 //
@@ -333,11 +389,64 @@ void CPaintNetworkGraphic::updateControls(QChartViewer *viewer)
 
 void CPaintNetworkGraphic::setupComboBox()
 {
-    my->comboBox_interface->clear();
+    my->comboBox_interface_2->clear();
     QMap<int, QString> interfaceList = adapter->getOnlyActiveInterface();
 
     for (auto it = interfaceList.constBegin(); it != interfaceList.constEnd(); ++it)
         my->comboBox_interface_2->addItem(it.value(), QVariant(it.key()));
+}
+
+void CPaintNetworkGraphic::updateComboBoxValue(int index)
+{
+    if (my->comboBox_interface_2->count() == 0)
+        return;
+
+    // get index of interf. from combobox
+    auto value = my->comboBox_interface_2->itemData(index).toInt();
+
+    // Set speed for selected network adapter
+    speed->setNetworkSpeedForAdapter(value, adapter->getRowHardwareAddr(value));
+}
+
+void CPaintNetworkGraphic::updateSpeed(uint received, uint sent, float download, float upload)
+{
+    // The current time
+    QDateTime now = QDateTime::currentDateTime();
+    // This is our formula for the random number generator
+    do
+    {
+        // We need the currentTime in millisecond resolution
+        qint64 t = m_nextDataTime.toMSecsSinceEpoch();
+        double currentTime = Chart::chartTime2((int)(t / 1000)) + (t % 1000) / 250 * 0.25;
+
+        // Get a data sample
+        double dataA = speed->convert(download, CNetworkAdapterSpeed::SPEED_MEASURE::MEGABIT);
+        double dataB = speed->convert(upload, CNetworkAdapterSpeed::SPEED_MEASURE::MEGABIT);
+
+        // In this demo, if the data arrays are full, the oldest 5% of data are discarded.
+        if (m_currentIndex >= sampleSize)
+        {
+            m_currentIndex = sampleSize * 95 / 100 - 1;
+
+            for (int i = 0; i < m_currentIndex; ++i)
+            {
+                int srcIndex = i + sampleSize - m_currentIndex;
+                m_timeStamps[i] = m_timeStamps[srcIndex];
+                m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
+                m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
+                // m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
+            }
+        }
+
+        // Store the new values in the current index position, and increment the index.
+        m_timeStamps[m_currentIndex] = currentTime;
+        m_dataSeriesA[m_currentIndex] = dataA;
+        m_dataSeriesB[m_currentIndex] = dataB;
+        // m_dataSeriesC[m_currentIndex] = dataC;
+        ++m_currentIndex;
+
+        m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
+    } while (m_nextDataTime < now);
 }
 
 //

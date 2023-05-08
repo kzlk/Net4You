@@ -9,6 +9,7 @@
 #include "cwirelessnetworkadapter.h"
 #include "cviewcontextmenu.h"
 #include "croutetable.h"
+#include "Network/cpaintnetworkgraphic.h"
 
 class CMainControlBlock : public QObject
 {
@@ -28,6 +29,7 @@ class CMainControlBlock : public QObject
     CNetworkAdapter *adapter{};
     CNetworkAdapterSpeed *speed{};
     CWirelessNetworkAdapter *wirelessAdapter{};
+    CPaintNetworkGraphic *graph{};
 
     QList<QStandardItem *> downloadedItem{};
     QList<QStandardItem *> uploadedItem{};
