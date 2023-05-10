@@ -4,13 +4,13 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 {
     try
     {
+        ui = qMain;
+
         speed = new CNetworkAdapterSpeed();
 
         adapter = new CNetworkAdapter();
 
         wirelessAdapter = new CWirelessNetworkAdapter();
-
-        ui = qMain;
 
         graph = new CPaintNetworkGraphic(qMain, speed, adapter);
 
@@ -232,4 +232,14 @@ QList<QStandardItem *> CMainControlBlock::createStandardItemList(QString name, Q
     items.append(new QStandardItem(icon, name));
     items.append(new QStandardItem(value));
     return items;
+}
+
+CNetworkAdapterSpeed *CMainControlBlock::getNetworkSpeedAdapter()
+{
+    return speed;
+}
+
+CWirelessNetworkAdapter *const CMainControlBlock::getWirelessNetworkAdapter()
+{
+    return wirelessAdapter;
 }

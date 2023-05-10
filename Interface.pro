@@ -21,6 +21,7 @@ SOURCES += \
     Network/croutetable.cpp \
     Network/cviewcontextmenu.cpp \
     Network/cwirelessnetworkadapter.cpp \
+    SystemTray/capptrayicon.cpp \
    main.cpp \
      GUI/mainwindow.cpp
 
@@ -36,7 +37,8 @@ HEADERS += \
      Network/cpaintnetworkgraphic.h \
      Network/croutetable.h \
      Network/cviewcontextmenu.h \
-     Network/cwirelessnetworkadapter.h
+     Network/cwirelessnetworkadapter.h \
+     SystemTray/capptrayicon.h
 
 FORMS += \
      GUI/main.ui
@@ -61,6 +63,7 @@ win32 {
 RESOURCES += \
     resources.qrc
 
+RC_ICONS = appicon.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

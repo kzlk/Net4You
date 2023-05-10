@@ -12,7 +12,7 @@ class CPaintNetworkGraphic : public QWidget
 {
     Q_OBJECT
   public:
-    CPaintNetworkGraphic(Ui::MainWindow *main, CNetworkAdapterSpeed *speed, CNetworkAdapter *adapter);
+    CPaintNetworkGraphic(Ui::MainWindow *main, CNetworkAdapterSpeed *speedNet, CNetworkAdapter *adapter);
     ~CPaintNetworkGraphic();
 
   private:
@@ -28,10 +28,10 @@ class CPaintNetworkGraphic : public QWidget
     // The maximum zoom in is 10 seconds.
     static const int zoomInLimit = 10;
 
-    double m_timeStamps[sampleSize];  // The timestamps for the data series
-    double m_dataSeriesA[sampleSize]; // The values for the data series A
-    double m_dataSeriesB[sampleSize]; // The values for the data series B
-    double m_dataSeriesC[sampleSize]; // The values for the data series C
+    double m_timeStamps[sampleSize]{};  // The timestamps for the data series
+    double m_dataSeriesA[sampleSize]{}; // The values for the data series A
+    double m_dataSeriesB[sampleSize]{}; // The values for the data series B
+    double m_dataSeriesC[sampleSize]{}; // The values for the data series C
 
     int m_currentIndex; // Index of the array position to which new values are added.
 
@@ -61,7 +61,6 @@ class CPaintNetworkGraphic : public QWidget
     void onSave(bool);                            // Save button clicked
     void onUpdatePeriodChanged(int);              // The chart update timer interval has changed.
     void onMouseMovePlotArea(QMouseEvent *event); // Mouse move on plot area
-    void onDataTimer();                           // Get new data values
     void onChartUpdateTimer();                    // Update the chart.
     void onViewPortChanged();                     // Viewport has changed
     void onHScrollBarChanged(int value);          // Scrollbar changed

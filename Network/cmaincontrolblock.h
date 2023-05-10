@@ -1,5 +1,8 @@
+#pragma once
+
 #ifndef CMAINCONTROLBLOCK_H
 #define CMAINCONTROLBLOCK_H
+
 #include <QObject>
 #include <QMainWindow>
 #include "ui_main.h"
@@ -16,6 +19,9 @@ class CMainControlBlock : public QObject
     Q_OBJECT
   public:
     CMainControlBlock(Ui::MainWindow *main);
+
+    CNetworkAdapterSpeed *getNetworkSpeedAdapter();
+    CWirelessNetworkAdapter *const getWirelessNetworkAdapter();
 
     void setupRouteTable();
 

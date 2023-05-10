@@ -100,9 +100,9 @@ float CNetworkAdapterSpeed::convert(float &bytes, SPEED_MEASURE speed)
     switch (speed)
     {
     case SPEED_MEASURE::KILOBIT:
-        return bytes * 8 / 1000;
+        return bytes / 1000;
     case SPEED_MEASURE::MEGABIT:
-        return bytes * 8 / pow(10, 6);
+        return bytes / pow(10, 6);
     default:
         return bytes;
     }

@@ -3,6 +3,10 @@
 #include <qapplication.h>
 #include <QButtonGroup>
 #include "ui_main.h"
+
+#include <QSystemTrayIcon>
+// #include "SystemTray/capptrayicon.h"
+
 bool GLOBAL_STATE = false;
 bool GLOBAL_TITLE_BAR = true;
 Ui::MainWindow *widgets = nullptr;
@@ -10,9 +14,56 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     ::widgets = this->ui;
-    // QWidget* w = new QWidget();
-    // w->setStyleSheet("background-color: #6272a4;");
-    // ui->setSyleSheet()
+
+    // CAppTrayIcon *icon = new CAppTrayIcon();
+
+    // TODO: separete setup to another class
+    /*Setting system tray icon*/
+    sysTrayIcon = new QSystemTrayIcon(this);
+    sysTrayIcon->setToolTip("Net4U"
+                            "\n"
+                            "Your network helper");
+    sysTrayIcon->setIcon(QIcon(":/images/images/images/logo4.png"));
+
+    /* Also connect clicking on the icon to the signal processor of this press  */
+    connect(sysTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::sysTrayIconActivated);
+
+    /*Create context menu for sys tray*/
+    QMenu *menu = new QMenu(this);
+    QAction *viewWindow = new QAction("Open Net4U", this);
+    QAction *minimazeAction = new QAction("Minimaze Net4U ", this);
+    QAction *quitAction = new QAction("Quit Net4U", this);
+    QAction *showWidgetAction = new QAction("Show mini widget", this);
+
+    const QString styleTray = "QMenu { background-color: rgb(33, 37, 43); color : white; }"
+                              "QMenu::item:selected { background-color: rgb(26, 58, 85);} "
+                              "QMenu::separator { background-color: white; height: 1px; margin: 5px 0px 5px 0px; }";
+    QFont font("Comic Sans MS", 12);
+
+    /* connect the signals clicks on menu items to by appropriate slots.
+     * The first menu item expands the application from the tray,
+     * And the second menu item terminates the application
+     * */
+
+    connect(viewWindow, &QAction::triggered, this, &MainWindow::show);
+    connect(minimazeAction, &QAction::triggered, this, &MainWindow::close);
+    connect(quitAction, &QAction::triggered, this, &QCoreApplication::quit);
+    // connect(viewWindow, &QAction::triggered, this, &MainWindow::show);
+
+    menu->addAction(viewWindow);
+    menu->addAction(minimazeAction);
+    menu->addAction(quitAction);
+    menu->addSeparator();
+    menu->addAction(showWidgetAction);
+
+    menu->setStyleSheet(styleTray);
+    menu->setFont(font);
+
+    sysTrayIcon->setContextMenu(menu);
+    sysTrayIcon->show();
+
+    /****************************************************************/
+
     ui->pushButton->setStyleSheet("background-color: #6272a4;");
     ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
     ui->tableWidget->setStyleSheet("QScrollBar:vertical { background: #6272a4; } QScrollBar:horizontal { "
@@ -179,18 +230,6 @@ void MainWindow::toggleMenu(bool enable)
 // ///////////////////////////////////////////////////////////////
 void MainWindow::toggleLeftBox(bool enable)
 {
-    // // Get a pointer to the layout of the frame
-    // QBoxLayout *frameLayout = qobject_cast<QBoxLayout *>(ui->extraTopMenu->layout());
-
-    // // Remove all the widgets from the layout
-    // QLayoutItem *child;
-    // while ((child = frameLayout->takeAt(0)) != nullptr)
-    // {
-    //     delete child->widget();
-    //     delete child;
-    // }
-
-    //  frameLayout->addWidget(new QPushButton("My push"));
 
     if (enable)
     {
@@ -412,6 +451,7 @@ void MainWindow::buttonClick()
     // GET BUTTON CLICKED
     QPushButton *btn = qobject_cast<QPushButton *>(sender());
     QString btnName = btn->objectName();
+
     // SHOW HOME PAGE
     if (btnName == "btn_home")
     {
@@ -445,6 +485,18 @@ void MainWindow::buttonClick()
         qDebug() << "Save BTN clicked!";
     }
 
+    if (btnName != "btn_home")
+    {
+        controlBlock->getNetworkSpeedAdapter()->stopSpeedUpdating();
+        controlBlock->getWirelessNetworkAdapter()->stopTimer();
+        qDebug() << "Hello from main\n";
+    }
+    else
+    {
+        controlBlock->getNetworkSpeedAdapter()->setIntervalForUpdatingSpeed(1000);
+        controlBlock->getWirelessNetworkAdapter()->startTimer(1000);
+    }
+
     // PRINT BTN NAME
     qDebug() << "Button \"" << btnName << "\" pressed!";
 }
@@ -470,6 +522,42 @@ void MainWindow::resizeGrips()
 
 void MainWindow::setupDeviceInfo()
 {
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (this->isVisible())
+    {
+        event->ignore();
+        this->hide();
+        QSystemTrayIcon::MessageIcon i = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+
+        sysTrayIcon->showMessage("Net4U",
+                                 ("The application is minimized to the tray. To maximize the application window "
+                                  "click on the application icon in the tray"),
+                                 i, 2000);
+    }
+
+    // emit appClose(event);
+}
+
+void MainWindow::sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::ActivationReason::Trigger:
+        if (!this->isVisible())
+        {
+            this->show();
+        }
+        else
+        {
+            this->hide();
+        };
+
+        break;
+    default:;
+    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)

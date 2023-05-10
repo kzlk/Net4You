@@ -8,11 +8,14 @@
 #include <QWidget>
 static const int DataInterval = 1000;
 
-CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapterSpeed *speed, CNetworkAdapter *adapter)
+CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapterSpeed *speedNet,
+                                           CNetworkAdapter *adapter)
 {
     my = qMain;
     this->adapter = adapter;
-    this->speed = speed;
+
+    /// this->speed = speed;
+    this->speed = new CNetworkAdapterSpeed();
 
     my->frame_5->setFrameShape(QFrame::StyledPanel);
 
@@ -34,16 +37,20 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
     connect(startStopUsage, &QButtonGroup::buttonPressed, [=](QAbstractButton *b) {
         if (startStopUsage->id(b) == 1)
         {
-            connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
-                    &CPaintNetworkGraphic::updateSpeed);
+            // speed->setIntervalForUpdatingSpeed(my->comboBox_period->currentText().toInt());
+
             m_ChartUpdateTimer->start();
+
+            //  connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
+            //        &CPaintNetworkGraphic::updateSpeed);
         }
 
         else if (startStopUsage->id(b) == 0)
         {
-            disconnect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
-                       &CPaintNetworkGraphic::updateSpeed);
+            // disconnect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
+            //            &CPaintNetworkGraphic::updateSpeed);
             m_ChartUpdateTimer->stop();
+            // speed->stopSpeedUpdating();
         }
         else if (startStopUsage->id(b) == 2)
         {
@@ -52,7 +59,6 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
                 m_timeStamps[i] = 0.0;
                 m_dataSeriesA[i] = 0.0;
                 m_dataSeriesB[i] = 0.0;
-                m_dataSeriesC[i] = 0.0;
             }
 
             m_currentIndex = 0;
@@ -61,16 +67,13 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
         }
     });
 
-    qMain->comboBox_period->addItems(QStringList() << "250"
-                                                   << "500"
-                                                   << "750"
-                                                   << "1000"
+    qMain->comboBox_period->addItems(QStringList() << "1000"
                                                    << "1250"
                                                    << "1500"
                                                    << "1750"
                                                    << "2000");
 
-    qMain->comboBox_period->setCurrentIndex(3);
+    qMain->comboBox_period->setCurrentIndex(0);
 
     connect(qMain->comboBox_period, SIGNAL(currentIndexChanged(int)), SLOT(onUpdatePeriodChanged(int)));
 
@@ -101,9 +104,6 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
     connect(m_ChartViewer, SIGNAL(viewPortChanged()), SLOT(onViewPortChanged()));
     connect(m_ChartViewer, SIGNAL(mouseMovePlotArea(QMouseEvent *)), SLOT(onMouseMovePlotArea(QMouseEvent *)));
 
-    // Horizontal scroll bar
-    // m_HScrollBar = new QScrollBar(Qt::Horizontal, this);
-    // m_HScrollBar->setGeometry(128, 358, 640, 17);
     connect(qMain->horizontalScrollBar_2, SIGNAL(valueChanged(int)), SLOT(onHScrollBarChanged(int)));
 
     // Clear data arrays to Chart::NoValue
@@ -123,77 +123,13 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
 
     // Combobox index updating
     setupComboBox();
+
     connect(qMain->comboBox_interface_2, &QComboBox::currentIndexChanged, this,
             &CPaintNetworkGraphic::updateComboBoxValue);
-
-    // connect(qMain->comboBox_interface_2, &QComboBox::highlighted, [=](int index) {
-    //     adapter->updateDeviceList();
-    //     setupComboBox();
-    // });
-
-    // updateComboBoxValue(my->comboBox_interface_2->currentIndex());
 
     // Updating speed
     connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this, &CPaintNetworkGraphic::updateSpeed);
     speed->setIntervalForUpdatingSpeed(DataInterval);
-
-    // Set up the data acquisition mechanism. In this demo, we just use a timer to get a
-    // sample every 250ms.
-    // QTimer *dataRateTimer = new QTimer(this);
-    // dataRateTimer->start(DataInterval);
-    // connect(dataRateTimer, SIGNAL(timeout()), SLOT(onDataTimer()));
-
-    //    // Connect the networkSpeedChangeg signal to a lambda function
-    //    connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
-    //            [=](uint received, uint sent, float download, float upload) {
-    //                // Find the "Download Speed" item in the model
-
-    //                // The current time
-    //                QDateTime now = QDateTime::currentDateTime();
-    //                // This is our formula for the random number generator
-    //                do
-    //                {
-    //                   // We need the currentTime in millisecond resolution
-    //                    qint64 t = m_nextDataTime.toMSecsSinceEpoch();
-    //                    double currentTime = Chart::chartTime2((int)(t / 1000)) + (t % 1000) / 250 * 0.25;
-
-    //                    // Get a data sample
-    //                    double p = currentTime * 4;
-    //                    double dataA = download;
-    //                    double dataB = upload;
-    //                    // double dataC = 150 + 100 * cos(p / 6.7) * cos(p / 11.9);
-
-    //                    // In this demo, if the data arrays are full, the oldest 5% of data are discarded.
-    //                    if (m_currentIndex >= sampleSize)
-    //                    {
-    //                        m_currentIndex = sampleSize * 95 / 100 - 1;
-
-    //                        for (int i = 0; i < m_currentIndex; ++i)
-    //                        {
-    //                            int srcIndex = i + sampleSize - m_currentIndex;
-    //                            m_timeStamps[i] = m_timeStamps[srcIndex];
-    //                            m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
-    //                            m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
-    //                            // m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
-    //                        }
-    //                    }
-
-    //                    // Store the new values in the current index position, and increment the index.
-    //                    m_timeStamps[m_currentIndex] = currentTime;
-    //                    m_dataSeriesA[m_currentIndex] = dataA;
-    //                    m_dataSeriesB[m_currentIndex] = dataB;
-    //                    // m_dataSeriesC[m_currentIndex] = dataC;
-    //                    ++m_currentIndex;
-
-    //                    m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
-    //                } while (m_nextDataTime < now);
-
-    //                // m_ValueA->setText(speed->convertSpeed(download));
-    //                // m_ValueB->setText(speed->convertSpeed(upload));
-
-    //                // m_ValueA->setText(QString::number(download));
-    //                // m_ValueB->setText(QString::number(upload));
-    //            });
 
     // Set up the chart update timer
     m_ChartUpdateTimer = new QTimer(this);
@@ -201,6 +137,8 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
 
     // Can start now
     m_ChartUpdateTimer->start();
+
+    updateComboBoxValue(my->comboBox_interface_2->currentIndex());
 
     qMain->verticalLayout_graph->addWidget(m_ChartViewer);
 }
@@ -241,63 +179,9 @@ void CPaintNetworkGraphic::onSave(bool)
 void CPaintNetworkGraphic::onUpdatePeriodChanged(int)
 {
     m_ChartUpdateTimer->start(updatePeriod->currentText().toInt());
+    disconnect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this, &CPaintNetworkGraphic::updateSpeed);
     speed->setIntervalForUpdatingSpeed(updatePeriod->currentText().toInt());
-}
-
-//
-// The data acquisition routine. In this demo, this is invoked every 250ms.
-//
-void CPaintNetworkGraphic::onDataTimer()
-{
-    // The current time
-    QDateTime now = QDateTime::currentDateTime();
-
-    //    // This is our formula for the random number generator
-    //    do
-    //    {
-    //        // We need the currentTime in millisecond resolution
-    //        qint64 t = m_nextDataTime.toMSecsSinceEpoch();
-    //        double currentTime = Chart::chartTime2((int)(t / 1000)) + (t % 1000) / 250 * 0.25;
-
-    //        // Get a data sample
-    //        double p = currentTime * 4;
-    //        double dataA = 20 + cos(p * 129241) * 10 + 1 / (cos(p) * cos(p) + 0.01);
-    //        double dataB = 150 + 100 * sin(p / 27.7) * sin(p / 10.1);
-    //        double dataC = 150 + 100 * cos(p / 6.7) * cos(p / 11.9);
-
-    //        // In this demo, if the data arrays are full, the oldest 5% of data are discarded.
-    //        if (m_currentIndex >= sampleSize)
-    //        {
-    //            m_currentIndex = sampleSize * 95 / 100 - 1;
-
-    //            for (int i = 0; i < m_currentIndex; ++i)
-    //            {
-    //                int srcIndex = i + sampleSize - m_currentIndex;
-    //                m_timeStamps[i] = m_timeStamps[srcIndex];
-    //                m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
-    //                m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
-    //                m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
-    //            }
-    //        }
-
-    //        // Store the new values in the current index position, and increment the index.
-    //        m_timeStamps[m_currentIndex] = currentTime;
-    //        m_dataSeriesA[m_currentIndex] = dataA;
-    //        m_dataSeriesB[m_currentIndex] = dataB;
-    //        m_dataSeriesC[m_currentIndex] = dataC;
-    //        ++m_currentIndex;
-
-    //        m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
-    //    } while (m_nextDataTime < now);
-
-    //
-    // We provide some visual feedback to the latest numbers generated, so you can see the
-    // data being generated.
-    //
-
-    // m_ValueA->setText(QString::number(m_dataSeriesA[m_currentIndex - 1], 'f', 2));
-    // m_ValueB->setText(QString::number(m_dataSeriesB[m_currentIndex - 1], 'f', 2));
-    // m_ValueC->setText(QString::number(m_dataSeriesC[m_currentIndex - 1], 'f', 2));
+    connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this, &CPaintNetworkGraphic::updateSpeed);
 }
 
 //
@@ -390,6 +274,7 @@ void CPaintNetworkGraphic::updateControls(QChartViewer *viewer)
 void CPaintNetworkGraphic::setupComboBox()
 {
     my->comboBox_interface_2->clear();
+
     QMap<int, QString> interfaceList = adapter->getOnlyActiveInterface();
 
     for (auto it = interfaceList.constBegin(); it != interfaceList.constEnd(); ++it)
