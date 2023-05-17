@@ -1,4 +1,5 @@
 #include "cnetworkadapter.h"
+#include "qprocess.h"
 #include <iostream>
 
 CNetworkAdapter::CNetworkAdapter()
@@ -251,6 +252,38 @@ bool CNetworkAdapter::isInterfaceWireless(int index)
         if (pCurrAddresses->IfType == IF_TYPE_IEEE80211)
             return true;
     return false;
+}
+
+QString CNetworkAdapter::getNetworkManufacturer(QString adapter)
+{
+    QString manufacturer;
+
+    // Construct the WMI command
+    QString wmicCommand = "SELECT Manufacturer FROM Win32_NetworkAdapter WHERE Name='";
+    wmicCommand.append(adapter);
+    wmicCommand.append("'");
+
+    // Execute the WMI command using QProcess
+    QProcess process;
+    process.start("wmic", QStringList() << "/NAMESPACE:\\\\root\\CIMV2"
+                                        << "PATH"
+                                        << "Win32_NetworkAdapter"
+                                        << "WHERE"
+                                        << "Name='" + adapter + "'"
+                                        << "GET"
+                                        << "Manufacturer"
+                                        << "/VALUE");
+    process.waitForFinished(-1);
+
+    // Read the output of the command
+    QByteArray output = process.readAllStandardOutput();
+
+    // Parse the output to extract the manufacturer value
+    QString outputStr(output);
+    int startIndex = outputStr.indexOf('=') + 1;
+    manufacturer = outputStr.mid(startIndex).trimmed();
+
+    return manufacturer;
 }
 
 QMap<int, QString> CNetworkAdapter::getOnlyActiveInterface()

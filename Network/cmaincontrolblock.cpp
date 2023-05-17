@@ -224,6 +224,15 @@ void CMainControlBlock::setupInterfaceInfo(int index)
         }
     }
 
+    QStandardItem *networkAdapterManufacturer = new QStandardItem("Network Adapter Manufacturer");
+    auto manufacturer = adapter->getNetworkManufacturer(interfaceDescription.networkAdapter);
+    if (manufacturer != "")
+    {
+        auto networkCompany = createStandardItemList("Company Name", manufacturer);
+        networkAdapterManufacturer->appendRow(networkCompany);
+        model->appendRow(networkAdapterManufacturer);
+    }
+
     ui->treeView_interfaces->expandAll();
 }
 

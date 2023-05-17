@@ -1,7 +1,14 @@
 #ifndef CNETWORKADAPTER_H
 #define CNETWORKADAPTER_H
+#define USE_VCCOM 1
+#include <Wbemidl.h>
+#include <comutil.h>
+#include <comdef.h>
+
+#include <wbemcli.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
 #include <QMainWindow>
 #include <QObject>
 #include <QWidget>
@@ -12,11 +19,12 @@
 #include <string.h>
 #include <QDateTime>
 #include <objbase.h>
+
 // For caching
 #include <QCache>
 // #pragma comment(lib, "ws2_32.lib")
 // #pragma comment(lib, "IPHLPAPI.lib")
-
+#pragma comment(lib, "wbemuuid.lib")
 class CNetworkAdapter : public QWidget
 {
     Q_OBJECT
@@ -56,6 +64,8 @@ class CNetworkAdapter : public QWidget
     PIP_ADAPTER_ADDRESSES getInterface(int index);
     char *getInterfaceGUID(int index);
     bool isInterfaceWireless(int index);
+
+    QString getNetworkManufacturer(QString adapter);
 
     QMap<int, QString> getOnlyActiveInterface();
 

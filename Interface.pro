@@ -3,10 +3,15 @@ QT       += core gui sql network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+LIBS += -lwbemuuid
+LIBS += -lOleAut32
+
+LIBS += -lole32
 LIBS += -lIphlpapi
 LIBS += -lws2_32
 LIBS += -lwlanapi
-LIBS += -lole32
+
+
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
