@@ -57,8 +57,12 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
                     QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
 
                     // Update the "Value" field with the new download speed
-                    model->setData(downloadIndex, QString::number(received) + " - " + speed->convertSpeed(download));
-                    model->setData(uploadIndex, QString::number(sent) + " - " + speed->convertSpeed(upload));
+                    model->setData(
+                        downloadIndex,
+                        speedStr.arg(received).arg(speed->convertSpeed(received)).arg(speed->convertSpeed(download)));
+
+                    model->setData(uploadIndex,
+                                   speedStr.arg(sent).arg(speed->convertSpeed(sent)).arg(speed->convertSpeed(upload)));
                 });
 
         speed->setIntervalForUpdatingSpeed(1000);

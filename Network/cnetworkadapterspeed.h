@@ -22,6 +22,7 @@ class CNetworkAdapterSpeed : public QObject
     {
         KILOBIT,
         MEGABIT,
+
         DEFAULT
     };
 

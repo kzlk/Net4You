@@ -15,7 +15,7 @@
 #include "CustomGrip.h"
 #include <QStandardItemModel>
 #include "Network/cmaincontrolblock.h"
-
+#include "aboutdialog.h"
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -70,6 +70,9 @@ class MainWindow : public QMainWindow
 
     // QSystemTrayIcon* icon
     QSystemTrayIcon *sysTrayIcon{};
+
+    //
+    AboutDialog *aboutApp{};
 
   private slots:
     void sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason);

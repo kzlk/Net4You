@@ -3,6 +3,8 @@
         <file>images/images/logo.png</file>
         <file>images/images/logo2.png</file>
         <file>images/images/logo4.png</file>
+        <file>images/images/big_logo.png</file>
+        <file>images/images/ethernet.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>images/icons/cil-3d.png</file>
@@ -273,5 +275,6 @@
         <file>images/icons/baseline_clear_white_24dp.png</file>
         <file>images/icons/baseline_play_arrow_white_24dp.png</file>
         <file>images/icons/baseline_stop_white_24dp.png</file>
+        <file>images/icons/logo4 (Custom).png</file>
     </qresource>
 </RCC>

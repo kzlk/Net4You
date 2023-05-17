@@ -151,11 +151,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     /*Main control block for control the functions with network*/
     controlBlock = new CMainControlBlock(ui);
+
+    aboutApp = new AboutDialog{};
+    connect(ui->btn_about, &QPushButton::clicked, [this]() {
+        if (!aboutApp->isVisible())
+        {
+            aboutApp->show();
+        }
+    });
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete aboutApp;
 }
 
 void MainWindow::maximize_restore()

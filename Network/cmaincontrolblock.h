@@ -52,6 +52,9 @@ class CMainControlBlock : public QObject
     //
     CRouteTable *routeTable{};
 
+    //
+    QString speedStr = "%1(%2) - %3/s";
+
   public slots:
     void setupInterfaceInfo(int index);
 };

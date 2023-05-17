@@ -73,7 +73,7 @@ QString CNetworkAdapterSpeed::convertSpeed(float speed)
 
         qDebug() << QLatin1String("Speed is : ") << speed << QLatin1String(" MB/s ");
 
-        return QString::number(speed) + QString(" MB/s");
+        return QString::number(speed) + QString(" MB");
     }
     else if (((speed)) >= 8 * 1024)
     {
@@ -83,13 +83,13 @@ QString CNetworkAdapterSpeed::convertSpeed(float speed)
 
         qDebug() << QLatin1String("Speed is : ") << speed << QLatin1String(" KB/s ");
 
-        return QString::number(speed) + QString(" KB/s");
+        return QString::number(speed) + QString(" KB");
     }
     else
     {
         speed = (speed) / 8;
 
-        return QString::number(speed) + QString(" B/s");
+        return QString::number(speed) + QString(" B");
 
         qDebug() << QLatin1String("Speed is: ") << speed << QLatin1String(" B/s");
     }

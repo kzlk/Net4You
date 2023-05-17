@@ -13,6 +13,8 @@ LIBS += -lole32
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000   # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    GUI/aboutdialog.cpp \
+    GUI/helpwidget.cpp \
     Graph/qchartimage.cpp \
     Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
@@ -29,6 +31,8 @@ HEADERS += \
      GUI/CustomGrip.h \
      GUI/Settings.h \
      GUI/Widget.h \
+     GUI/aboutdialog.h \
+     GUI/helpwidget.h \
      GUI/mainwindow.h \
      Graph/qchartimage.h \
      Network/cmaincontrolblock.h \
@@ -41,6 +45,8 @@ HEADERS += \
      SystemTray/capptrayicon.h
 
 FORMS += \
+     GUI/aboutdialog.ui \
+     GUI/helpwidget.ui \
      GUI/main.ui
 
 DEFINES += CHARTDIR_HIDE_OBSOLETE _CRT_SECURE_NO_WARNINGS
@@ -49,6 +55,7 @@ CONFIG += warn_off
 
 INCLUDEPATH += ../KURSOVA_SPZ/GraphLibrary/include
 
+TRANSLATIONS = languages/English_en.ts 
 
 win32 {
     contains(QMAKE_HOST.arch, x86_64) {
@@ -69,5 +76,8 @@ RC_ICONS = appicon.ico
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    images/icons/logo4 (Custom).png
 
 
