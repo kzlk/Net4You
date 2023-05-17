@@ -2547,6 +2547,9 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                            </disabled>
                           </palette>
                          </property>
+                         <property name="mouseTracking">
+                          <bool>true</bool>
+                         </property>
                          <property name="frameShape">
                           <enum>QFrame::NoFrame</enum>
                          </property>
@@ -3795,7 +3798,7 @@ QHeaderView::section:vertical {
                  <widget class="QFrame" name="extraRightBox">
                   <property name="minimumSize">
                    <size>
-                    <width>240</width>
+                    <width>0</width>
                     <height>0</height>
                    </size>
                   </property>

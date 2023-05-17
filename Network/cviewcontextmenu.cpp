@@ -1,9 +1,12 @@
 #include "cviewcontextmenu.h"
 #include "qapplication.h"
 #include <QClipboard>
+#include <QProcess>
+#include <QToolTip>
 CViewContextMenu::CViewContextMenu(QTreeView *view, CNetworkAdapter *adapter)
 {
     mView = view;
+
     myNetworkAdapter = adapter;
     mView->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -11,6 +14,9 @@ CViewContextMenu::CViewContextMenu(QTreeView *view, CNetworkAdapter *adapter)
     mView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(mView, &QAbstractItemView::customContextMenuRequested, this, &CViewContextMenu::showContextMenu);
+
+    connect(mView, &QAbstractItemView::doubleClicked, this,
+            [](const QModelIndex &index) { QProcess::startDetached("control.exe", QStringList() << "ncpa.cpl"); });
 }
 
 CViewContextMenu::CViewContextMenu(QTableView *view, CNetworkAdapter *adapter)

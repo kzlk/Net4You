@@ -37,6 +37,8 @@ class CMainControlBlock : public QObject
     CWirelessNetworkAdapter *wirelessAdapter{};
     CPaintNetworkGraphic *graph{};
 
+    QList<QStandardItem *> networkAdapterItems{};
+
     QList<QStandardItem *> downloadedItem{};
     QList<QStandardItem *> uploadedItem{};
 

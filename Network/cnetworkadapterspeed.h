@@ -35,11 +35,11 @@ class CNetworkAdapterSpeed : public QObject
     int index{};
     BYTE *rowHardwareAddr{};
 
-    quint64 inBytes;
-    quint64 outBytes;
+    quint64 inBytes{};
+    quint64 outBytes{};
 
-    quint64 preInBytes;
-    quint64 preOutBytes;
+    quint64 preInBytes{};
+    quint64 preOutBytes{};
 
     float setPrecision(float v);
 

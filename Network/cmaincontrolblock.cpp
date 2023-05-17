@@ -1,5 +1,5 @@
 #include "cmaincontrolblock.h"
-
+#include <QToolTip>
 CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
 {
     try
@@ -32,6 +32,12 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         // Setup route table window
         setupRouteTable();
 
+        connect(ui->treeView_interfaces, &QAbstractItemView::entered, this, [=](const QModelIndex &index) {
+            // QPoint globalPos = view->viewport()->mapToGlobal(view->visualRect(index).center());
+            if (index == model->indexFromItem(networkAdapterItems.at(0)))
+                QToolTip::showText(QCursor::pos(), tr("Double click to open network connection window"));
+        });
+
         connect(ui->comboBox_interface, &QComboBox::currentIndexChanged, this, &CMainControlBlock::setupInterfaceInfo);
         setupInterfaceInfo(ui->comboBox_interface->currentIndex());
 
@@ -50,20 +56,21 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         });
 
         // Connect the networkSpeedChangeg signal to a lambda function
-        connect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
-                [=](uint received, uint sent, float download, float upload) {
-                    // Find the "Download Speed" item in the model
-                    QModelIndex downloadIndex = model->indexFromItem(downloadedItem.at(1));
-                    QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
+        connect(
+            speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged,
+            [=](uint received, uint sent, float download, float upload) {
+                // Find the "Download Speed" item in the model
+                QModelIndex downloadIndex = model->indexFromItem(downloadedItem.at(1));
+                QModelIndex uploadIndex = model->indexFromItem(uploadedItem.at(1));
 
-                    // Update the "Value" field with the new download speed
-                    model->setData(
-                        downloadIndex,
-                        speedStr.arg(received).arg(speed->convertSpeed(received)).arg(speed->convertSpeed(download)));
+                // Update the "Value" field with the new download speed
+                model->setData(
+                    downloadIndex,
+                    speedStr.arg(received).arg(speed->convertSpeed(received * 8)).arg(speed->convertSpeed(download)));
 
-                    model->setData(uploadIndex,
-                                   speedStr.arg(sent).arg(speed->convertSpeed(sent)).arg(speed->convertSpeed(upload)));
-                });
+                model->setData(uploadIndex,
+                               speedStr.arg(sent).arg(speed->convertSpeed(sent * 8)).arg(speed->convertSpeed(upload)));
+            });
 
         speed->setIntervalForUpdatingSpeed(1000);
 
@@ -115,8 +122,7 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     topLevelItems.append(networkAdapterPropertiesItem);
 
     // Create child items for "Network Adapter Properties"
-    QList<QStandardItem *> networkAdapterItems =
-        createStandardItemList("Network Adapter", interfaceDescription.networkAdapter);
+    networkAdapterItems = createStandardItemList("Network Adapter", interfaceDescription.networkAdapter);
     QList<QStandardItem *> interfaceTypeItems = createStandardItemList(
         "Interface Type", interfaceDescription.interfaceType, QIcon(":/icons/images/icons/cil-save.png"));
     QList<QStandardItem *> hardwareAddressItems =

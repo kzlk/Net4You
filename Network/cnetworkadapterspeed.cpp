@@ -156,21 +156,12 @@ void CNetworkAdapterSpeed::updateSpeed()
         {
             continue;
         }
-        // qDebug() << "MAC dw = " << Table->table[i].bPhysAddr << " MAC " << rowHardwareAddr << '\n';
-        //   Check if the current interface index matches the selected adapter's index
-        //  qDebug() << "index = " << Table->table[i].dwInOctets << "\t" << Table->table[adapterInfo->Index - 1].
-        //  dwInOctets;
         if (memcmp(Table->table[i].bPhysAddr, rowHardwareAddr, 6) == 0 ||
             (Table->table[i].dwType == Table->table[index - 1].dwType))
         {
-
-            // qDebug() << "Counter = " << cnt << " index is  " << Table->table[i].dwIndex << '\n';
             inBytes += Table->table[i].dwInOctets;
             outBytes += Table->table[i].dwOutOctets;
         }
-        // qDebug() << "i = " << i << " ||  " << Table->table[i].dwInOctets << " || " << Table->table[i].bDescr << " ||
-        // "
-        //  << Table->table[i].dwIndex << '\n';
     }
     free(Table);
 
