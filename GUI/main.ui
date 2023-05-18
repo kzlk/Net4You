@@ -2185,7 +2185,7 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                       <string notr="true">background: transparent;</string>
                      </property>
                      <property name="currentIndex">
-                      <number>0</number>
+                      <number>5</number>
                      </property>
                      <widget class="QWidget" name="home">
                       <property name="styleSheet">
@@ -2903,7 +2903,7 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>222</width>
+                                 <width>278</width>
                                  <height>222</height>
                                 </rect>
                                </property>
@@ -3798,7 +3798,7 @@ QHeaderView::section:vertical {
                  <widget class="QFrame" name="extraRightBox">
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
+                    <width>240</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -3903,10 +3903,18 @@ QHeaderView::section:vertical {
                        <property name="text">
                         <string>English</string>
                        </property>
+                       <property name="icon">
+                        <iconset resource="../resources.qrc">
+                         <normaloff>:/images/images/images/united-kingdom.png</normaloff>:/images/images/images/united-kingdom.png</iconset>
+                       </property>
                       </item>
                       <item>
                        <property name="text">
                         <string>Ukrainian</string>
+                       </property>
+                       <property name="icon">
+                        <iconset resource="../resources.qrc">
+                         <normaloff>:/images/images/images/ukraine.png</normaloff>:/images/images/images/ukraine.png</iconset>
                        </property>
                       </item>
                      </widget>

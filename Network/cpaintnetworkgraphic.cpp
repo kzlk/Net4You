@@ -161,8 +161,9 @@ void CPaintNetworkGraphic::onMouseUsageChanged(QAbstractButton *b)
 //
 void CPaintNetworkGraphic::onSave(bool)
 {
-    QString fileName = QFileDialog::getSaveFileName(
-        this, "Save", "network_chart", "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
+    QString fileName =
+        QFileDialog::getSaveFileName(this, tr("Save"), "network_chart",
+                                     "PNG (*.png);;JPG (*.jpg);;GIF (*.gif);;BMP (*.bmp);;SVG (*.svg);;PDF (*.pdf)");
 
     if (!fileName.isEmpty())
     {
@@ -319,7 +320,6 @@ void CPaintNetworkGraphic::updateSpeed(uint received, uint sent, float download,
                 m_timeStamps[i] = m_timeStamps[srcIndex];
                 m_dataSeriesA[i] = m_dataSeriesA[srcIndex];
                 m_dataSeriesB[i] = m_dataSeriesB[srcIndex];
-                // m_dataSeriesC[i] = m_dataSeriesC[srcIndex];
             }
         }
 
@@ -327,7 +327,6 @@ void CPaintNetworkGraphic::updateSpeed(uint received, uint sent, float download,
         m_timeStamps[m_currentIndex] = currentTime;
         m_dataSeriesA[m_currentIndex] = dataA;
         m_dataSeriesB[m_currentIndex] = dataB;
-        // m_dataSeriesC[m_currentIndex] = dataC;
         ++m_currentIndex;
 
         m_nextDataTime = m_nextDataTime.addMSecs(DataInterval);
@@ -385,7 +384,7 @@ void CPaintNetworkGraphic::drawChart(QChartViewer *viewer)
     c->setClipping();
 
     // Add a title to the chart using 18pt Arial font
-    c->addTitle("Realtime network speed graphic", "Arial", 18, 0xffffff);
+    c->addTitle(tr("Realtime network speed graphic").toUtf8().constData(), "Arial", 18, 0xffffff);
 
     // Add a legend box at (55, 25) using horizontal layout. Use 10pt Arial Bold as font. Set the
     // background and border color to transparent and use line style legend key.
@@ -404,7 +403,7 @@ void CPaintNetworkGraphic::drawChart(QChartViewer *viewer)
     c->yAxis()->setTickLength(0);
 
     // Add axis title using 12pt Arial Bold Italic font
-    c->yAxis()->setTitle("Network adapter speed", "Arial Bold", 12, 0xffffff);
+    c->yAxis()->setTitle(tr("Network adapter speed").toUtf8().constData(), "Arial Bold", 12, 0xffffff);
 
     //================================================================================
     // Add data to chart
@@ -423,10 +422,8 @@ void CPaintNetworkGraphic::drawChart(QChartViewer *viewer)
     // Now we add the 3 data series to a line layer, using the color red (ff0000), green (00cc00)
     // and blue (0000ff)
     layer->setXData(viewPortTimeStamps);
-    layer->addDataSet(viewPortDataSeriesA, 0xff0000, "Download");
-    layer->addDataSet(viewPortDataSeriesB, 0x00cc00, "Upload");
-    // layer->addDataSet(viewPortDataSeriesC, 0x0000ff, "Gamma");
-
+    layer->addDataSet(viewPortDataSeriesA, 0xff0000, tr("Download").toUtf8().constData());
+    layer->addDataSet(viewPortDataSeriesB, 0x00cc00, tr("Upload").toUtf8().constData());
     //================================================================================
     // Configure axis scale and labelling
     //================================================================================

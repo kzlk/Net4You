@@ -5,6 +5,8 @@
         <file>images/images/logo4.png</file>
         <file>images/images/big_logo.png</file>
         <file>images/images/ethernet.png</file>
+        <file>images/images/ukraine.png</file>
+        <file>images/images/united-kingdom.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>images/icons/cil-3d.png</file>

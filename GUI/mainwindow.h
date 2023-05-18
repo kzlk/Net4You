@@ -16,6 +16,7 @@
 #include <QStandardItemModel>
 #include "Network/cmaincontrolblock.h"
 #include "aboutdialog.h"
+#include "ctranslateapp.h"
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -32,7 +33,6 @@ class MainWindow : public QMainWindow
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
-    //    void mouseMoveEvent(QMouseEvent *event) override;
 
   public:
     MainWindow(QWidget *parent = nullptr);
@@ -70,9 +70,10 @@ class MainWindow : public QMainWindow
 
     // QSystemTrayIcon* icon
     QSystemTrayIcon *sysTrayIcon{};
-
     //
     AboutDialog *aboutApp{};
+
+    CTranslateApp *translateApp{};
 
   private slots:
     void sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason);

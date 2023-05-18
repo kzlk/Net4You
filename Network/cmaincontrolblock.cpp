@@ -17,7 +17,7 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         // Create a QStandardItemModel to hold the data
         model = new QStandardItemModel();
         // Set the header data for the model
-        model->setHorizontalHeaderLabels({"Field", "Value"});
+        model->setHorizontalHeaderLabels({tr("Field"), tr("Value")});
 
         // Set model for treeView
         ui->treeView_interfaces->setModel(model);
@@ -117,25 +117,25 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     // Create the top-level item for "Network Adapter Properties"
     QList<QStandardItem *> topLevelItems;
 
-    QStandardItem *networkAdapterPropertiesItem = (new QStandardItem("Network Adapter Properties"));
+    QStandardItem *networkAdapterPropertiesItem = (new QStandardItem(tr("Network Adapter Properties")));
 
     topLevelItems.append(networkAdapterPropertiesItem);
 
     // Create child items for "Network Adapter Properties"
-    networkAdapterItems = createStandardItemList("Network Adapter", interfaceDescription.networkAdapter);
+    networkAdapterItems = createStandardItemList(tr("Network Adapter"), interfaceDescription.networkAdapter);
     QList<QStandardItem *> interfaceTypeItems = createStandardItemList(
-        "Interface Type", interfaceDescription.interfaceType, QIcon(":/icons/images/icons/cil-save.png"));
+        tr("Interface Type"), interfaceDescription.interfaceType, QIcon(":/icons/images/icons/cil-save.png"));
     QList<QStandardItem *> hardwareAddressItems =
-        createStandardItemList("Hardware Address", interfaceDescription.hardwareAddress);
+        createStandardItemList(tr("Hardware Address"), interfaceDescription.hardwareAddress);
     QList<QStandardItem *> connectionNameItems =
-        createStandardItemList("Connection Name", interfaceDescription.connectionName);
+        createStandardItemList(tr("Connection Name"), interfaceDescription.connectionName);
     QList<QStandardItem *> connectionSpeedItems = createStandardItemList(
-        "Connection Speed", QString::number(interfaceDescription.connectionSpeed / 1000000) + QString(" Mbps"));
+        tr("Connection Speed"), QString::number(interfaceDescription.connectionSpeed / 1000000) + QString(" Mbps"));
     QList<QStandardItem *> mtuItems =
-        createStandardItemList("MTU", QString::number(interfaceDescription.MTU).append(" bytes"));
+        createStandardItemList(tr("MTU"), QString::number(interfaceDescription.MTU).append(" bytes"));
 
-    downloadedItem = createStandardItemList("Bytes Received", "0");
-    uploadedItem = createStandardItemList("Bytes Sent", "0");
+    downloadedItem = createStandardItemList(tr("Bytes Received"), "0");
+    uploadedItem = createStandardItemList(tr("Bytes Sent"), "0");
     speed->setNetworkSpeedForAdapter(value, interfaceDescription.rowHardwareAddr);
 
     networkAdapterPropertiesItem->appendRow(networkAdapterItems);
@@ -147,20 +147,20 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     networkAdapterPropertiesItem->appendRow(downloadedItem);
     networkAdapterPropertiesItem->appendRow(uploadedItem);
 
-    QStandardItem *networkAdapterAddressesItem = new QStandardItem("Network Adapter Addresses");
+    QStandardItem *networkAdapterAddressesItem = new QStandardItem(tr("Network Adapter Addresses"));
     topLevelItems.append(networkAdapterAddressesItem);
 
     // Create child items for "Network Adapter Addresses"
-    auto ipItem = createStandardItemList("IP", intrfaceDescriptionAddreses.IPAddr);
-    auto maskItem = createStandardItemList("Subnet Mask", intrfaceDescriptionAddreses.subnetMask);
-    auto dhcpItem = createStandardItemList("DHCP address", intrfaceDescriptionAddreses.DHCPAddr);
+    auto ipItem = createStandardItemList(tr("IP"), intrfaceDescriptionAddreses.IPAddr);
+    auto maskItem = createStandardItemList(tr("Subnet Mask"), intrfaceDescriptionAddreses.subnetMask);
+    auto dhcpItem = createStandardItemList(tr("DHCP address"), intrfaceDescriptionAddreses.DHCPAddr);
     auto dhcpLeaseObtainedItem = createStandardItemList(
-        "DHCP Lease Obtained", intrfaceDescriptionAddreses.DHCPLeaseObtained.toString("dd.MM.yyyy hh:mm:ss"));
+        tr("DHCP Lease Obtained"), intrfaceDescriptionAddreses.DHCPLeaseObtained.toString("dd.MM.yyyy hh:mm:ss"));
     auto dhcpLeaseExpiresItem = createStandardItemList(
-        "DHCP Lease Expires", intrfaceDescriptionAddreses.DHCPLeaseExpires.toString("dd.MM.yyyy hh:mm:ss"));
-    auto gatewayItem = createStandardItemList("Default Gateway", intrfaceDescriptionAddreses.gatewayAddr);
-    auto dnsItem = createStandardItemList("DNS", intrfaceDescriptionAddreses.DNSServers);
-    auto dnsSuffixItem = createStandardItemList("DNS Suffix", intrfaceDescriptionAddreses.DNSSuffix);
+        tr("DHCP Lease Expires"), intrfaceDescriptionAddreses.DHCPLeaseExpires.toString("dd.MM.yyyy hh:mm:ss"));
+    auto gatewayItem = createStandardItemList(tr("Default Gateway"), intrfaceDescriptionAddreses.gatewayAddr);
+    auto dnsItem = createStandardItemList(tr("DNS"), intrfaceDescriptionAddreses.DNSServers);
+    auto dnsSuffixItem = createStandardItemList(tr("DNS Suffix"), intrfaceDescriptionAddreses.DNSSuffix);
 
     networkAdapterAddressesItem->appendRow(ipItem);
     networkAdapterAddressesItem->appendRow(maskItem);
@@ -186,26 +186,27 @@ void CMainControlBlock::setupInterfaceInfo(int index)
         if (wirelessAdapter->isInterfaceConnectedToWifi(interfaceDescription.networkAdapter))
         {
 
-            auto wirelessAdapterItem = new QStandardItem("Network Adapter Addresses");
+            auto wirelessAdapterItem = new QStandardItem(tr("Network Adapter Addresses"));
 
             auto wirelessProperties = wirelessAdapter->getWlanProperties(interfaceDescription.networkAdapter);
 
-            auto networkTypeItem = createStandardItemList("Network Type", wirelessProperties.networkType);
-            auto ssidItem = createStandardItemList("SSID", wirelessProperties.ssid);
+            auto networkTypeItem = createStandardItemList(tr("Network Type"), wirelessProperties.networkType);
+            auto ssidItem = createStandardItemList(tr("SSID"), wirelessProperties.ssid);
             auto bssidItem = createStandardItemList("BSSID", wirelessProperties.bssid);
-            auto authAlgo = createStandardItemList("Authentication Algorithm", wirelessProperties.authAlgorithm);
-            auto cipherAlgo = createStandardItemList("Cipher Algorithm", wirelessProperties.cipherAlgo);
+            auto authAlgo = createStandardItemList(tr("Authentication Algorithm"), wirelessProperties.authAlgorithm);
+            auto cipherAlgo = createStandardItemList(tr("Cipher Algorithm"), wirelessProperties.cipherAlgo);
 
             channelItem = createStandardItemList(
-                "Channel", QString::number(wirelessAdapter->getWifiChannelNumFromMhz(wirelessProperties.channelMHz)) +
-                               " (" + QString::number(wirelessProperties.channelMHz) + " Mhz)");
+                tr("Channel"),
+                QString::number(wirelessAdapter->getWifiChannelNumFromMhz(wirelessProperties.channelMHz)) + " (" +
+                    QString::number(wirelessProperties.channelMHz) + " Mhz)");
 
-            signalStreghtItem = createStandardItemList("Signal Strength", "");
+            signalStreghtItem = createStandardItemList(tr("Signal Strength"), "");
 
             transmitRateItem =
-                createStandardItemList("Transmit Rate", QString::number(wirelessProperties.transmitRate) + " Mbps");
+                createStandardItemList(tr("Transmit Rate"), QString::number(wirelessProperties.transmitRate) + " Mbps");
             receiveRateItem =
-                createStandardItemList("Receive Rate", QString::number(wirelessProperties.receieveRate) + " Mbps");
+                createStandardItemList(tr("Receive Rate"), QString::number(wirelessProperties.receieveRate) + " Mbps");
 
             wirelessAdapter->setWlanInterfaceForUpdating(interfaceDescription.networkAdapter);
             wirelessAdapter->startTimer(1000);
@@ -224,11 +225,11 @@ void CMainControlBlock::setupInterfaceInfo(int index)
         }
     }
 
-    QStandardItem *networkAdapterManufacturer = new QStandardItem("Network Adapter Manufacturer");
+    QStandardItem *networkAdapterManufacturer = new QStandardItem(tr("Network Adapter Manufacturer"));
     auto manufacturer = adapter->getNetworkManufacturer(interfaceDescription.networkAdapter);
     if (manufacturer != "")
     {
-        auto networkCompany = createStandardItemList("Company Name", manufacturer);
+        auto networkCompany = createStandardItemList(tr("Company Name"), manufacturer);
         networkAdapterManufacturer->appendRow(networkCompany);
         model->appendRow(networkAdapterManufacturer);
     }

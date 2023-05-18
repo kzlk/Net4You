@@ -19,7 +19,9 @@ LIBS += -lwlanapi
 
 SOURCES += \
     GUI/aboutdialog.cpp \
+    GUI/ctranslateapp.cpp \
     GUI/helpwidget.cpp \
+    GUI/speedwidget.cpp \
     Graph/qchartimage.cpp \
     Network/cmaincontrolblock.cpp \
     Network/cnetworkadapter.cpp \
@@ -37,8 +39,10 @@ HEADERS += \
      GUI/Settings.h \
      GUI/Widget.h \
      GUI/aboutdialog.h \
+     GUI/ctranslateapp.h \
      GUI/helpwidget.h \
      GUI/mainwindow.h \
+     GUI/speedwidget.h \
      Graph/qchartimage.h \
      Network/cmaincontrolblock.h \
      Network/cnetworkadapter.h \
@@ -52,7 +56,8 @@ HEADERS += \
 FORMS += \
      GUI/aboutdialog.ui \
      GUI/helpwidget.ui \
-     GUI/main.ui
+     GUI/main.ui \
+     GUI/speedwidget.ui
 
 DEFINES += CHARTDIR_HIDE_OBSOLETE _CRT_SECURE_NO_WARNINGS
 
@@ -60,7 +65,7 @@ CONFIG += warn_off
 
 INCLUDEPATH += ../KURSOVA_SPZ/GraphLibrary/include
 
-TRANSLATIONS = languages/English_en.ts 
+TRANSLATIONS += languages/Ukrainian_ua.ts
 
 win32 {
     contains(QMAKE_HOST.arch, x86_64) {

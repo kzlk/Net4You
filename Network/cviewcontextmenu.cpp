@@ -31,9 +31,9 @@ CViewContextMenu::CViewContextMenu(QTableView *view, CNetworkAdapter *adapter)
         QFont font("Comic Sans MS", 12);
         contextMenu.setFont(font);
 
-        QAction actionCopySelectedValue("Copy selected", this);
-        QAction actionCopyAll("Copy all", this);
-        QAction refresh("Refresh", this);
+        QAction actionCopySelectedValue(tr("Copy selected"), this);
+        QAction actionCopyAll(tr("Copy all"), this);
+        QAction refresh(tr("Refresh"), this);
         connect(&refresh, &QAction::triggered, this, &CViewContextMenu::refresh);
         connect(&actionCopyAll, &QAction::triggered, this, &CViewContextMenu::copyAllTableValue);
         connect(&actionCopySelectedValue, &QAction::triggered, this, &CViewContextMenu::copyAllSelectedRow);
@@ -57,18 +57,18 @@ void CViewContextMenu::showContextMenu(const QPoint &pos)
     QFont font("Comic Sans MS", 12); // create a QFont object with the desired font properties
     contextMenu.setFont(font);       // set the font for the menu
 
-    QAction actionCopySelectedValue("Copy selected", this);
+    QAction actionCopySelectedValue(tr("Copy selected"), this);
 
     connect(&actionCopySelectedValue, &QAction::triggered, this, &CViewContextMenu::copySelectedValue);
     contextMenu.addAction(&actionCopySelectedValue);
 
-    QAction actionCopyAll("Copy all", this);
+    QAction actionCopyAll(tr("Copy all"), this);
     connect(&actionCopyAll, &QAction::triggered, this, &CViewContextMenu::copyAll);
 
-    QAction refresh("Refresh", this);
+    QAction refresh(tr("Refresh"), this);
     connect(&refresh, &QAction::triggered, this, &CViewContextMenu::refresh);
 
-    QAction onlyValue("Copy only value", this);
+    QAction onlyValue(tr("Copy only value"), this);
     connect(&onlyValue, &QAction::triggered, this, &CViewContextMenu::copyValueItem);
 
     contextMenu.addAction(&actionCopyAll);

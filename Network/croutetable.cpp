@@ -21,7 +21,8 @@ CRouteTable::CRouteTable(QTableView *tableView, CNetworkAdapter *adapter)
 
     model = new QStandardItemModel(this);
 
-    model->setHorizontalHeaderLabels({"Type", "Net Destination", "Netmask", "Gateway", "Metric", "Interface"});
+    model->setHorizontalHeaderLabels(
+        {tr("Type"), tr("Net Destination"), tr("Netmask"), tr("Gateway"), tr("Metric"), tr("Interface")});
 
     myTableView->setModel(model);
 
@@ -92,25 +93,25 @@ void CRouteTable::fillTable()
         switch (pIpForwardTable->table[i].dwForwardType)
         {
         case MIB_IPROUTE_TYPE_OTHER:
-            forwardType = ("Other");
+            forwardType = (tr("Other"));
             break;
         case MIB_IPROUTE_TYPE_INVALID:
-            forwardType = ("Invalid route");
+            forwardType = (tr("Invalid route"));
             break;
         case MIB_IPROUTE_TYPE_DIRECT:
-            forwardType = ("Direct");
+            forwardType = (tr("Direct"));
             break;
         case MIB_IPROUTE_TYPE_INDIRECT:
-            forwardType = ("Indirect");
+            forwardType = (tr("Indirect"));
             break;
         default:
-            forwardType = ("Unknown type");
+            forwardType = (tr("Unknown type"));
             break;
         }
 
         // printf("\tRoute[%d] Metric1: %ld\n", i, pIpForwardTable->table[i].dwForwardMetric1);
 
-        row.append(new QStandardItem("Active (" + forwardType + ")"));
+        row.append(new QStandardItem(tr("Active (") + forwardType + ")"));
         row.append(new QStandardItem(szDestIp));
         row.append(new QStandardItem(szMaskIp));
         row.append(new QStandardItem(szGatewayIp));

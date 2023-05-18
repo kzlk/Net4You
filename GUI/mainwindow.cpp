@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     ::widgets = this->ui;
 
+    translateApp = new CTranslateApp(ui);
+
     // CAppTrayIcon *icon = new CAppTrayIcon();
 
     // TODO: separete setup to another class
@@ -30,10 +32,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     /*Create context menu for sys tray*/
     QMenu *menu = new QMenu(this);
-    QAction *viewWindow = new QAction("Open Net4U", this);
-    QAction *minimazeAction = new QAction("Minimaze Net4U ", this);
-    QAction *quitAction = new QAction("Quit Net4U", this);
-    QAction *showWidgetAction = new QAction("Show mini widget", this);
+    QAction *viewWindow = new QAction(tr("Open Net4U"), this);
+    QAction *minimazeAction = new QAction(tr("Minimaze Net4U "), this);
+    QAction *quitAction = new QAction(tr("Quit Net4U"), this);
+    QAction *showWidgetAction = new QAction(tr("Show mini widget"), this);
 
     const QString styleTray = "QMenu { background-color: rgb(33, 37, 43); color : white; }"
                               "QMenu::item:selected { background-color: rgb(26, 58, 85);} "
