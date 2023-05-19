@@ -17,12 +17,11 @@ CMainControlBlock::CMainControlBlock(Ui::MainWindow *qMain)
         // Create a QStandardItemModel to hold the data
         model = new QStandardItemModel();
         // Set the header data for the model
-        model->setHorizontalHeaderLabels({tr("Field"), tr("Value")});
 
         // Set model for treeView
         ui->treeView_interfaces->setModel(model);
         // Set column width for first (0) column
-        ui->treeView_interfaces->setColumnWidth(0, 300);
+
         // Enable sorting for treeView
         ui->treeView_interfaces->setSortingEnabled(true);
 
@@ -98,6 +97,8 @@ void CMainControlBlock::setupRouteTable()
 
 void CMainControlBlock::setupInterfaceInfo(int index)
 {
+    model->setHorizontalHeaderLabels({tr("Field"), tr("Value")});
+    ui->treeView_interfaces->setColumnWidth(0, 300);
     if (ui->comboBox_interface->count() == 0)
         return;
 
@@ -123,8 +124,8 @@ void CMainControlBlock::setupInterfaceInfo(int index)
 
     // Create child items for "Network Adapter Properties"
     networkAdapterItems = createStandardItemList(tr("Network Adapter"), interfaceDescription.networkAdapter);
-    QList<QStandardItem *> interfaceTypeItems = createStandardItemList(
-        tr("Interface Type"), interfaceDescription.interfaceType, QIcon(":/icons/images/icons/cil-save.png"));
+    QList<QStandardItem *> interfaceTypeItems =
+        createStandardItemList(tr("Interface Type"), interfaceDescription.interfaceType);
     QList<QStandardItem *> hardwareAddressItems =
         createStandardItemList(tr("Hardware Address"), interfaceDescription.hardwareAddress);
     QList<QStandardItem *> connectionNameItems =
@@ -174,7 +175,6 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     model->appendRow(networkAdapterPropertiesItem);
     model->appendRow(new QStandardItem(""));
     model->appendRow(networkAdapterAddressesItem);
-    model->appendRow(new QStandardItem(""));
 
     /*Wireless*/
     wirelessAdapter->stopTimer();
@@ -185,7 +185,7 @@ void CMainControlBlock::setupInterfaceInfo(int index)
 
         if (wirelessAdapter->isInterfaceConnectedToWifi(interfaceDescription.networkAdapter))
         {
-
+            model->appendRow(new QStandardItem(""));
             auto wirelessAdapterItem = new QStandardItem(tr("Network Adapter Addresses"));
 
             auto wirelessProperties = wirelessAdapter->getWlanProperties(interfaceDescription.networkAdapter);
@@ -229,6 +229,7 @@ void CMainControlBlock::setupInterfaceInfo(int index)
     auto manufacturer = adapter->getNetworkManufacturer(interfaceDescription.networkAdapter);
     if (manufacturer != "")
     {
+        model->appendRow(new QStandardItem(""));
         auto networkCompany = createStandardItemList(tr("Company Name"), manufacturer);
         networkAdapterManufacturer->appendRow(networkCompany);
         model->appendRow(networkAdapterManufacturer);

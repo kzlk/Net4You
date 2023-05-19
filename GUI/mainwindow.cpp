@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <qapplication.h>
 #include <QButtonGroup>
+#include "SystemTray/capptrayicon.h"
 #include "ui_main.h"
 
 #include <QSystemTrayIcon>
@@ -12,59 +13,19 @@ bool GLOBAL_TITLE_BAR = true;
 Ui::MainWindow *widgets = nullptr;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     ::widgets = this->ui;
-
+    widgets->btn_exit->hide();
+    widgets->btn_save->hide();
+    widgets->stackedWidget_2->setCurrentWidget(ui->page_empty);
     translateApp = new CTranslateApp(ui);
+    icon = new CAppTrayIcon();
+    connect(icon, &CAppTrayIcon::showApp, this, &MainWindow::show);
+    connect(icon, &CAppTrayIcon::hideApp, this, &MainWindow::close);
+    connect(icon, &CAppTrayIcon::closeApp, this, &QCoreApplication::exit);
 
-    // CAppTrayIcon *icon = new CAppTrayIcon();
-
-    // TODO: separete setup to another class
-    /*Setting system tray icon*/
-    sysTrayIcon = new QSystemTrayIcon(this);
-    sysTrayIcon->setToolTip("Net4U"
-                            "\n"
-                            "Your network helper");
-    sysTrayIcon->setIcon(QIcon(":/images/images/images/logo4.png"));
-
-    /* Also connect clicking on the icon to the signal processor of this press  */
-    connect(sysTrayIcon, &QSystemTrayIcon::activated, this, &MainWindow::sysTrayIconActivated);
-
-    /*Create context menu for sys tray*/
-    QMenu *menu = new QMenu(this);
-    QAction *viewWindow = new QAction(tr("Open Net4U"), this);
-    QAction *minimazeAction = new QAction(tr("Minimaze Net4U "), this);
-    QAction *quitAction = new QAction(tr("Quit Net4U"), this);
-    QAction *showWidgetAction = new QAction(tr("Show mini widget"), this);
-
-    const QString styleTray = "QMenu { background-color: rgb(33, 37, 43); color : white; }"
-                              "QMenu::item:selected { background-color: rgb(26, 58, 85);} "
-                              "QMenu::separator { background-color: white; height: 1px; margin: 5px 0px 5px 0px; }";
-    QFont font("Comic Sans MS", 12);
-
-    /* connect the signals clicks on menu items to by appropriate slots.
-     * The first menu item expands the application from the tray,
-     * And the second menu item terminates the application
-     * */
-
-    connect(viewWindow, &QAction::triggered, this, &MainWindow::show);
-    connect(minimazeAction, &QAction::triggered, this, &MainWindow::close);
-    connect(quitAction, &QAction::triggered, this, &QCoreApplication::quit);
-    // connect(viewWindow, &QAction::triggered, this, &MainWindow::show);
-
-    menu->addAction(viewWindow);
-    menu->addAction(minimazeAction);
-    menu->addAction(quitAction);
-    menu->addSeparator();
-    menu->addAction(showWidgetAction);
-
-    menu->setStyleSheet(styleTray);
-    menu->setFont(font);
-
-    sysTrayIcon->setContextMenu(menu);
-    sysTrayIcon->show();
-
-    /****************************************************************/
+    connect(icon, &CAppTrayIcon::activateTray, this, &MainWindow::sysTrayIconActivated);
 
     ui->pushButton->setStyleSheet("background-color: #6272a4;");
     ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
@@ -80,11 +41,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     settings.ENABLE_CUSTOM_TITLE_BAR = true;
     // APP NAME
     QString title = "Net4U";
-    QString description = "Lightweigth program to network monitoring";
+    // description = tr("Lightweigth program to network monitoring");
 
     // APPLY TEXTS
     this->setWindowTitle(title);
-    widgets->titleRightInfo->setText(description);
+    widgets->titleRightInfo->setText(tr("Lightweigth program to network monitoring"));
 
     // TOGGLE MENU
     connect(widgets->toggleButton, &QPushButton::clicked, [=]() { MainWindow::toggleMenu(true); });
@@ -541,12 +502,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
     {
         event->ignore();
         this->hide();
-        QSystemTrayIcon::MessageIcon i = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+        icon->showMessage();
+        // QSystemTrayIcon::MessageIcon i = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
 
-        sysTrayIcon->showMessage("Net4U",
-                                 ("The application is minimized to the tray. To maximize the application window "
-                                  "click on the application icon in the tray"),
-                                 i, 2000);
+        // sysTrayIcon->showMessage("Net4U",
+        //                          (tr("The application is minimized to the tray. To maximize the application window "
+        //                              "click on the application icon in the tray")),
+        //                          i, 2000);
     }
 
     // emit appClose(event);
@@ -620,6 +582,21 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         setCursor(Qt::ArrowCursor);
     }
     return QObject::eventFilter(obj, event);
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+        // controlBlock = new CMainControlBlock(ui);
+        widgets->titleRightInfo->setText((description.toUtf8().constData()));
+        controlBlock->setupInterfaceInfo(ui->comboBox_interface->currentIndex());
+        controlBlock->setupRouteTable();
+        aboutApp = new AboutDialog{};
+        ui->retranslateUi(this);
+    }
+
+    QMainWindow::changeEvent(event);
 }
 // MOUSE CLICK EVENTS
 // ///////////////////////////////////////////////////////////////

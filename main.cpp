@@ -13,16 +13,16 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setWindowIcon(QIcon(":/images/images/images/logo4.png"));
 
-    QTranslator translator;
-    if (translator.load("../KURSOVA_SPZ/languages/Ukrainian_ua"))
-    {
-        a.installTranslator(&translator);
-    }
-    else
-    {
-        qDebug() << "Не вдалося завантажити мову";
-        qDebug() << "Translation file path:" << QDir::current().absoluteFilePath("languages/Ukrainian_ua.qm");
-    }
+    // QTranslator translator;
+    // if (translator.load("../KURSOVA_SPZ/languages/Ukrainian_ua"))
+    // {
+    //     a.installTranslator(&translator);
+    // }
+    // else
+    // {
+    //     qDebug() << "Не вдалося завантажити мову";
+    //     qDebug() << "Translation file path:" << QDir::current().absoluteFilePath("languages/Ukrainian_ua.qm");
+    // }
     MainWindow w;
 
     w.show();

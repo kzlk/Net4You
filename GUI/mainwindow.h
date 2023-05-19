@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "SystemTray/capptrayicon.h"
 #include "qsystemtrayicon.h"
 #pragma once
 #include "qgraphicseffect.h"
@@ -33,6 +34,7 @@ class MainWindow : public QMainWindow
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
+    void changeEvent(QEvent *event) override;
 
   public:
     MainWindow(QWidget *parent = nullptr);
@@ -67,14 +69,14 @@ class MainWindow : public QMainWindow
     CustomGrip *bottom_grip;
     QSizeGrip *sizegrip;
     QPointF dragPos;
-
+    QString description{};
     // QSystemTrayIcon* icon
     QSystemTrayIcon *sysTrayIcon{};
     //
     AboutDialog *aboutApp{};
 
     CTranslateApp *translateApp{};
-
+    CAppTrayIcon *icon{};
   private slots:
     void sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
 

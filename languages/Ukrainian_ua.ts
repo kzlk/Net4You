@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk" sourcelanguage="en_US">
+<TS version="2.1" language="uk_UA" sourcelanguage="en_US">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -45,110 +45,145 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
 </context>
 <context>
+    <name>CAppTrayIcon</name>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="10"/>
+        <source>Net4U
+Your network helper</source>
+        <translation>Net4U
+Ваш мережевий помічник</translation>
+    </message>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="21"/>
+        <source>Open Net4U</source>
+        <translation>Відкрити Net4U</translation>
+    </message>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="22"/>
+        <source>Minimaze Net4U </source>
+        <translation>Звернути Net4U </translation>
+    </message>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="23"/>
+        <source>Quit Net4U</source>
+        <translation>Закрити  Net4U</translation>
+    </message>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="24"/>
+        <source>Show mini widget</source>
+        <translation>Показати міні-віджет</translation>
+    </message>
+    <message>
+        <location filename="../SystemTray/capptrayicon.cpp" line="50"/>
+        <source>The application is minimized to the tray. To maximize the application window click on the application icon in the tray</source>
+        <translation>Додаток згорнуто в трей. Щоб розгорнути вікно програми, натисніть на іконку програми в треї</translation>
+    </message>
+</context>
+<context>
     <name>CMainControlBlock</name>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="20"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="100"/>
         <source>Field</source>
         <translation>Поле</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="20"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="100"/>
         <source>Value</source>
         <translation>Значення</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="38"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="37"/>
         <source>Double click to open network connection window</source>
         <translation>Двічі клацніть, щоб відкрити вікно підключення до мережі</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="120"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="121"/>
         <source>Network Adapter Properties</source>
         <translation>Властивості мережевого адаптера</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="125"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="126"/>
         <source>Network Adapter</source>
         <translation>Мережевий адаптер</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="127"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="128"/>
         <source>Interface Type</source>
         <translation>Тип інтерфейсу</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="129"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="130"/>
         <source>Hardware Address</source>
         <translation>Апаратна адрема</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="131"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="132"/>
         <source>Connection Name</source>
         <translation>З&apos;єднання</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="133"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="134"/>
         <source>Connection Speed</source>
         <translation>Швидкість з&apos;єднання</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="135"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="136"/>
         <source>MTU</source>
         <translation>MTU</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="137"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="138"/>
         <source>Bytes Received</source>
         <translation>Отримано байт</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="138"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="139"/>
         <source>Bytes Sent</source>
         <translation>Відправлено байт</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="150"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="151"/>
         <location filename="../Network/cmaincontrolblock.cpp" line="189"/>
         <source>Network Adapter Addresses</source>
         <translation>Адреси мережевого адаптера</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="154"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="155"/>
         <source>IP</source>
         <translation>IP</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="155"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="156"/>
         <source>Subnet Mask</source>
         <translation>Маска підмережі</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="156"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="157"/>
         <source>DHCP address</source>
         <translation>DHCP адреса</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="158"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="159"/>
         <source>DHCP Lease Obtained</source>
         <translation>Отримано DHCP оренду</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="160"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="161"/>
         <source>DHCP Lease Expires</source>
         <translation>DHCP оренда закінчується</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="161"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="162"/>
         <source>Default Gateway</source>
         <translation>Стандартний шлюз</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="162"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="163"/>
         <source>DNS</source>
         <translation>DNS</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="163"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="164"/>
         <source>DNS Suffix</source>
         <translation>DNS суфікс</translation>
     </message>
@@ -198,7 +233,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <translation>Виробник мережевого адаптера</translation>
     </message>
     <message>
-        <location filename="../Network/cmaincontrolblock.cpp" line="232"/>
+        <location filename="../Network/cmaincontrolblock.cpp" line="233"/>
         <source>Company Name</source>
         <translation>Назва компанії</translation>
     </message>
@@ -386,145 +421,139 @@ li.checked::marker { content: &quot;\2612&quot;; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../GUI/main.ui" line="21"/>
+        <location filename="../GUI/main.ui" line="30"/>
         <source>MainWindow</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="755"/>
+        <location filename="../GUI/main.ui" line="764"/>
         <source>Net4You</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="785"/>
+        <location filename="../GUI/main.ui" line="794"/>
         <source>Easy. Smart. Fast</source>
         <translation>Легко, Сучасно, Швидко</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="879"/>
+        <location filename="../GUI/main.ui" line="894"/>
         <source>Hide</source>
         <translation>Приховати</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="942"/>
+        <location filename="../GUI/main.ui" line="957"/>
         <source>Network Adapter</source>
         <translation>Мережеві адаптери</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="978"/>
+        <location filename="../GUI/main.ui" line="993"/>
         <source>Graph</source>
         <translation>Графік</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1014"/>
+        <location filename="../GUI/main.ui" line="1029"/>
         <source>Routes</source>
         <translation>Маршрути</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1050"/>
+        <location filename="../GUI/main.ui" line="1065"/>
         <source>Usage</source>
         <translation>Використання трафіку</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1086"/>
+        <location filename="../GUI/main.ui" line="1101"/>
         <source>User Detection</source>
         <translation>Пошук підключень</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1150"/>
-        <location filename="../GUI/main.ui" line="1286"/>
+        <location filename="../GUI/main.ui" line="1165"/>
+        <location filename="../GUI/main.ui" line="1301"/>
         <source>Left Box</source>
         <translation>Ліве меню</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1308"/>
+        <location filename="../GUI/main.ui" line="1323"/>
         <source>Close left box</source>
         <translation>Закрити ліве меню</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1423"/>
+        <location filename="../GUI/main.ui" line="1438"/>
         <source>Zoom In</source>
         <translation>Збільшити</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1467"/>
+        <location filename="../GUI/main.ui" line="1482"/>
         <source>Zoom Out</source>
         <translation>Зменшити</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1509"/>
+        <location filename="../GUI/main.ui" line="1524"/>
         <source>Scroll</source>
         <translation>Прокрутити</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1569"/>
+        <location filename="../GUI/main.ui" line="1584"/>
         <source>Save</source>
         <translation>Зберегти</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1608"/>
+        <location filename="../GUI/main.ui" line="1623"/>
         <source>Update period (ms)</source>
         <translation>Період оновлення (мс)</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1668"/>
+        <location filename="../GUI/main.ui" line="1683"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1711"/>
+        <location filename="../GUI/main.ui" line="1726"/>
         <source>Run</source>
         <translation>Пуск</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1757"/>
+        <location filename="../GUI/main.ui" line="1772"/>
         <source>Clear</source>
         <translation>Очистити</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="1985"/>
-        <location filename="../GUI/main.ui" line="3869"/>
+        <location filename="../GUI/main.ui" line="2000"/>
+        <location filename="../GUI/main.ui" line="3854"/>
         <source>Settings</source>
         <translation>Налаштування</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2020"/>
+        <location filename="../GUI/main.ui" line="2035"/>
         <source>Minimize</source>
         <translation>Звернути</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2064"/>
+        <location filename="../GUI/main.ui" line="2079"/>
         <source>Maximize</source>
         <translation>На весь екран</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2099"/>
+        <location filename="../GUI/main.ui" line="2114"/>
         <source>Close</source>
         <translation>Закрити</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2231"/>
+        <location filename="../GUI/main.ui" line="2246"/>
         <source>Select network adapter interface</source>
         <translation>Виберіть інтерфейс мережевого адаптера</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2310"/>
         <location filename="../GUI/main.ui" line="2836"/>
-        <location filename="../GUI/main.ui" line="3649"/>
         <source>Test 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2315"/>
         <location filename="../GUI/main.ui" line="2841"/>
-        <location filename="../GUI/main.ui" line="3654"/>
         <source>Test 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="2320"/>
         <location filename="../GUI/main.ui" line="2846"/>
-        <location filename="../GUI/main.ui" line="3659"/>
         <source>Test 3</source>
         <translation type="unfinished"></translation>
     </message>
@@ -569,59 +598,60 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <translation>Виберіть активний мережевий адаптер (підключений до Інтернету)</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="3904"/>
+        <location filename="../GUI/main.ui" line="3889"/>
         <source>English</source>
         <translation>Англійська</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="3913"/>
+        <location filename="../GUI/main.ui" line="3898"/>
         <source>Ukrainian</source>
         <translation>Українська</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="3939"/>
+        <location filename="../GUI/main.ui" line="3924"/>
         <source>Select language</source>
         <translation>Оберіть мову</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="4008"/>
+        <location filename="../GUI/main.ui" line="3993"/>
         <source>Run in startup</source>
         <translation>Автозавантаження</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="4052"/>
+        <location filename="../GUI/main.ui" line="4037"/>
         <source>Help Net4U</source>
         <translation>Допомога</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="4097"/>
+        <location filename="../GUI/main.ui" line="4082"/>
         <source>About</source>
         <translation>Про додаток</translation>
     </message>
     <message>
-        <location filename="../GUI/main.ui" line="4197"/>
+        <location filename="../GUI/main.ui" line="4182"/>
         <source>v1 beta</source>
-        <translation type="unfinished">v1 бета</translation>
+        <translation>v1 бета</translation>
     </message>
     <message>
-        <location filename="../GUI/mainwindow.cpp" line="35"/>
         <source>Open Net4U</source>
-        <translation>Відкрити Net4U</translation>
+        <translation type="vanished">Відкрити Net4U</translation>
     </message>
     <message>
-        <location filename="../GUI/mainwindow.cpp" line="36"/>
         <source>Minimaze Net4U </source>
-        <translation>Звернути Net4U </translation>
+        <translation type="vanished">Звернути Net4U </translation>
     </message>
     <message>
-        <location filename="../GUI/mainwindow.cpp" line="37"/>
         <source>Quit Net4U</source>
-        <translation>Закрити  Net4U</translation>
+        <translation type="vanished">Закрити  Net4U</translation>
     </message>
     <message>
-        <location filename="../GUI/mainwindow.cpp" line="38"/>
         <source>Show mini widget</source>
-        <translation>Показати міні-віджет</translation>
+        <translation type="vanished">Показати міні-віджет</translation>
+    </message>
+    <message>
+        <location filename="../GUI/mainwindow.cpp" line="48"/>
+        <source>Lightweigth program to network monitoring</source>
+        <translation>Ваший мережевий помічник</translation>
     </message>
 </context>
 <context>

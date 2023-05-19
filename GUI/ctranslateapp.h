@@ -6,10 +6,10 @@
 #include <QMainWindow>
 #include "ui_main.h"
 
-#define UA_PATH "languages/Ukrainian_ua"
+#define UA_PATH "../KURSOVA_SPZ/languages/Ukrainian_ua"
 #define UA_LANG "Ukrainian"
 
-class CTranslateApp : public QWidget
+class CTranslateApp : public QMainWindow
 {
     Q_OBJECT
   public:
@@ -19,7 +19,6 @@ class CTranslateApp : public QWidget
     Ui::MainWindow *mMain{};
     QTranslator *translator{};
     void changeLanguage(QString language);
-    void changeEvent(QEvent *event) override;
 
   private slots:
     void changeComboBoxIndex(const QString &index);
