@@ -117,23 +117,23 @@ QString CWirelessNetworkAdapter::getSignalLvlFromDBM(int dBm)
 {
     if (dBm <= -30 && dBm >= -50)
     {
-        return "Excellent";
+        return tr("Excellent");
     }
     else if (dBm <= -51 && dBm >= -60)
     {
-        return "Good";
+        return tr("Good");
     }
     else if (dBm <= -61 && dBm >= -70)
     {
-        return "Fair";
+        return tr("Fair");
     }
     else if (dBm <= -71 && dBm >= -85)
     {
-        return "Poor";
+        return tr("Poor");
     }
     else
     {
-        return "Unreliable";
+        return tr("Unreliable");
     }
 }
 

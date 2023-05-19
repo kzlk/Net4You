@@ -43,6 +43,16 @@ CAppTrayIcon::CAppTrayIcon()
     connect(quitAction, &QAction::triggered, [this](bool checked = false) { emit this->closeApp(checked); });
 }
 
+CAppTrayIcon::~CAppTrayIcon()
+{
+    delete sysTrayIcon;
+    delete menu;
+    delete viewWindow;
+    delete minimazeAction;
+    delete quitAction;
+    delete showWidgetAction;
+}
+
 void CAppTrayIcon::showMessage()
 {
     QSystemTrayIcon::MessageIcon i = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);

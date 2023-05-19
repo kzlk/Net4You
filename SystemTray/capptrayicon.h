@@ -10,6 +10,7 @@ class CAppTrayIcon : public QMainWindow
     Q_OBJECT
   public:
     CAppTrayIcon();
+    ~CAppTrayIcon();
     void showMessage();
 
   private:

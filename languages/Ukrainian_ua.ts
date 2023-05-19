@@ -74,7 +74,7 @@ Your network helper</source>
         <translation>Показати міні-віджет</translation>
     </message>
     <message>
-        <location filename="../SystemTray/capptrayicon.cpp" line="50"/>
+        <location filename="../SystemTray/capptrayicon.cpp" line="60"/>
         <source>The application is minimized to the tray. To maximize the application window click on the application icon in the tray</source>
         <translation>Додаток згорнуто в трей. Щоб розгорнути вікно програми, натисніть на іконку програми в треї</translation>
     </message>
@@ -381,6 +381,34 @@ Your network helper</source>
     </message>
 </context>
 <context>
+    <name>CWirelessNetworkAdapter</name>
+    <message>
+        <location filename="../Network/cwirelessnetworkadapter.cpp" line="120"/>
+        <source>Excellent</source>
+        <translation>Чудово</translation>
+    </message>
+    <message>
+        <location filename="../Network/cwirelessnetworkadapter.cpp" line="124"/>
+        <source>Good</source>
+        <translation>Добре</translation>
+    </message>
+    <message>
+        <location filename="../Network/cwirelessnetworkadapter.cpp" line="128"/>
+        <source>Fair</source>
+        <translation>Слабкий</translation>
+    </message>
+    <message>
+        <location filename="../Network/cwirelessnetworkadapter.cpp" line="132"/>
+        <source>Poor</source>
+        <translation>Поганий</translation>
+    </message>
+    <message>
+        <location filename="../Network/cwirelessnetworkadapter.cpp" line="136"/>
+        <source>Unreliable</source>
+        <translation>Немає зв&apos;язку</translation>
+    </message>
+</context>
+<context>
     <name>HelpWidget</name>
     <message>
         <location filename="../GUI/helpwidget.ui" line="14"/>
@@ -649,6 +677,7 @@ Your network helper</source>
         <translation type="vanished">Показати міні-віджет</translation>
     </message>
     <message>
+        <location filename="../GUI/main.ui" line="1942"/>
         <location filename="../GUI/mainwindow.cpp" line="48"/>
         <source>Lightweigth program to network monitoring</source>
         <translation>Ваший мережевий помічник</translation>
