@@ -47,8 +47,6 @@ CPaintNetworkGraphic::CPaintNetworkGraphic(Ui::MainWindow *qMain, CNetworkAdapte
 
         else if (startStopUsage->id(b) == 0)
         {
-            // disconnect(speed, &CNetworkAdapterSpeed::networkBytesReceivedChanged, this,
-            //            &CPaintNetworkGraphic::updateSpeed);
             m_ChartUpdateTimer->stop();
             // speed->stopSpeedUpdating();
         }
@@ -280,6 +278,16 @@ void CPaintNetworkGraphic::setupComboBox()
 
     for (auto it = interfaceList.constBegin(); it != interfaceList.constEnd(); ++it)
         my->comboBox_interface_2->addItem(it.value(), QVariant(it.key()));
+}
+
+void CPaintNetworkGraphic::stopPaintingGraph()
+{
+    m_ChartUpdateTimer->stop();
+}
+
+void CPaintNetworkGraphic::startPaintingGraph()
+{
+    m_ChartUpdateTimer->start();
 }
 
 void CPaintNetworkGraphic::updateComboBoxValue(int index)
@@ -541,13 +549,20 @@ void CPaintNetworkGraphic::trackLineLabel(XYChart *c, int mouseX)
             {
                 d->circle(xCoor, yCoor, 4, 4, color, color);
 
+                auto f = speed->convertSpeed(dataSet->getValue(xIndex) * 1000000).toLatin1().constData();
                 std::ostringstream label;
                 label << "<*font,bgColor=" << std::hex << color << "*> "
-                      << c->formatValue(dataSet->getValue(xIndex), "{value|P4}") << " <*font*>";
+                      << f /*c->formatValue(dataSet->getValue(xIndex), "{value|P4}")*/ << " <*font*>";
+
                 t = d->text(label.str().c_str(), "Arial Bold", 10);
 
-                // Draw the label on the right side of the dot if the mouse is on the left side the
-                // chart, and vice versa. This ensures the label will not go outside the chart image.
+                // t = d->text(f, "Arial Bold", 10);
+
+                qDebug() << "Hello from graph " << label.str().c_str() << "\n";
+                //
+                //  Draw the label on the right side of the dot if the mouse is on the left side the
+                //  chart, and vice versa. This ensures the label will not go outside the chart image.
+
                 if (xCoor <= (plotArea->getLeftX() + plotArea->getRightX()) / 2)
                     t->draw(xCoor + 6, yCoor, 0xffffff, Chart::Left);
                 else

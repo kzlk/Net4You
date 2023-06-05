@@ -255,6 +255,11 @@ QList<QStandardItem *> CMainControlBlock::createStandardItemList(QString name, Q
     return items;
 }
 
+CPaintNetworkGraphic *CMainControlBlock::getGraph() const
+{
+    return graph;
+}
+
 CNetworkAdapterSpeed *CMainControlBlock::getNetworkSpeedAdapter()
 {
     return speed;

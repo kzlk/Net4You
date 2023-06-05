@@ -279,4 +279,7 @@
         <file>images/icons/baseline_stop_white_24dp.png</file>
         <file>images/icons/logo4 (Custom).png</file>
     </qresource>
+    <qresource prefix="/languages">
+        <file>languages/Ukrainian_ua.qm</file>
+    </qresource>
 </RCC>

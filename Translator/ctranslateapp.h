@@ -6,10 +6,10 @@
 #include <QMainWindow>
 #include "ui_main.h"
 
-#define UA_PATH "../KURSOVA_SPZ/languages/Ukrainian_ua"
+#define UA_PATH ":/languages/languages/Ukrainian_ua.qm"
 #define UA_LANG "Ukrainian"
 
-class CTranslateApp : public QMainWindow
+class CTranslateApp : public QObject
 {
     Q_OBJECT
   public:

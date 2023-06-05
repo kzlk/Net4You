@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "GUI/helpwidget.h"
 #include "SystemTray/capptrayicon.h"
 #include "qsystemtrayicon.h"
 #pragma once
@@ -17,7 +18,7 @@
 #include <QStandardItemModel>
 #include "Network/cmaincontrolblock.h"
 #include "aboutdialog.h"
-#include "ctranslateapp.h"
+#include "Translator/ctranslateapp.h"
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -56,6 +57,7 @@ class MainWindow : public QMainWindow
     void resizeGrips();
     // setup main stack widget
     void setupDeviceInfo();
+    void initTray();
 
   private:
     CMainControlBlock *controlBlock{};
@@ -74,6 +76,7 @@ class MainWindow : public QMainWindow
     QSystemTrayIcon *sysTrayIcon{};
     //
     AboutDialog *aboutApp{};
+    HelpWidget *helpWidget{};
 
     CTranslateApp *translateApp{};
     CAppTrayIcon *icon{};

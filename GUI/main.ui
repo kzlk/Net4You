@@ -2200,7 +2200,7 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                       <string notr="true">background: transparent;</string>
                      </property>
                      <property name="currentIndex">
-                      <number>0</number>
+                      <number>2</number>
                      </property>
                      <widget class="QWidget" name="home">
                       <property name="styleSheet">
@@ -2903,7 +2903,7 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                                 <rect>
                                  <x>0</x>
                                  <y>0</y>
-                                 <width>222</width>
+                                 <width>273</width>
                                  <height>222</height>
                                 </rect>
                                </property>
@@ -3480,6 +3480,9 @@ background-image: url(:/icons/images/icons/baseline_clear_white_24dp.png);
                            </disabled>
                           </palette>
                          </property>
+                         <property name="styleSheet">
+                          <string notr="true">font: 12pt &quot;Comic Sans MS&quot;;</string>
+                         </property>
                          <property name="frameShape">
                           <enum>QFrame::NoFrame</enum>
                          </property>
@@ -3868,9 +3871,9 @@ QHeaderView::section:vertical {
                       <property name="geometry">
                        <rect>
                         <x>17</x>
-                        <y>182</y>
+                        <y>134</y>
                         <width>201</width>
-                        <height>41</height>
+                        <height>40</height>
                        </rect>
                       </property>
                       <property name="font">
@@ -3907,9 +3910,9 @@ QHeaderView::section:vertical {
                       <property name="geometry">
                        <rect>
                         <x>18</x>
-                        <y>146</y>
+                        <y>100</y>
                         <width>221</width>
-                        <height>31</height>
+                        <height>30</height>
                        </rect>
                       </property>
                       <property name="font">
@@ -3928,9 +3931,9 @@ QHeaderView::section:vertical {
                       <property name="geometry">
                        <rect>
                         <x>10</x>
-                        <y>70</y>
+                        <y>221</y>
                         <width>221</width>
-                        <height>40</height>
+                        <height>10</height>
                        </rect>
                       </property>
                       <property name="orientation">
@@ -3953,9 +3956,9 @@ QHeaderView::section:vertical {
                      <widget class="QCheckBox" name="checkBox_startup">
                       <property name="geometry">
                        <rect>
-                        <x>-1</x>
-                        <y>98</y>
-                        <width>241</width>
+                        <x>0</x>
+                        <y>189</y>
+                        <width>230</width>
                         <height>30</height>
                        </rect>
                       </property>
@@ -3996,9 +3999,9 @@ QHeaderView::section:vertical {
                      <widget class="QPushButton" name="btn_help">
                       <property name="geometry">
                        <rect>
-                        <x>2</x>
-                        <y>0</y>
-                        <width>230</width>
+                        <x>0</x>
+                        <y>43</y>
+                        <width>241</width>
                         <height>45</height>
                        </rect>
                       </property>
@@ -4040,9 +4043,9 @@ QHeaderView::section:vertical {
                      <widget class="QPushButton" name="btn_about">
                       <property name="geometry">
                        <rect>
-                        <x>3</x>
-                        <y>42</y>
-                        <width>231</width>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>240</width>
                         <height>45</height>
                        </rect>
                       </property>
@@ -4086,9 +4089,9 @@ QHeaderView::section:vertical {
                       <property name="geometry">
                        <rect>
                         <x>10</x>
-                        <y>120</y>
+                        <y>89</y>
                         <width>221</width>
-                        <height>40</height>
+                        <height>10</height>
                        </rect>
                       </property>
                       <property name="orientation">
@@ -4099,9 +4102,9 @@ QHeaderView::section:vertical {
                       <property name="geometry">
                        <rect>
                         <x>10</x>
-                        <y>211</y>
+                        <y>175</y>
                         <width>221</width>
-                        <height>40</height>
+                        <height>10</height>
                        </rect>
                       </property>
                       <property name="orientation">

@@ -18,14 +18,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ::widgets = this->ui;
     widgets->btn_exit->hide();
     widgets->btn_save->hide();
+    // widgets->btn_help->hide();
+
     widgets->stackedWidget_2->setCurrentWidget(ui->page_empty);
     translateApp = new CTranslateApp(ui);
-    icon = new CAppTrayIcon();
-    connect(icon, &CAppTrayIcon::showApp, this, &MainWindow::show);
-    connect(icon, &CAppTrayIcon::hideApp, this, &MainWindow::close);
-    connect(icon, &CAppTrayIcon::closeApp, this, &QCoreApplication::exit);
 
-    connect(icon, &CAppTrayIcon::activateTray, this, &MainWindow::sysTrayIconActivated);
+    initTray();
 
     ui->pushButton->setStyleSheet("background-color: #6272a4;");
     ui->plainTextEdit->setStyleSheet("background-color: #6272a4;");
@@ -116,12 +114,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     controlBlock = new CMainControlBlock(ui);
 
     aboutApp = new AboutDialog{};
+    helpWidget = new HelpWidget{};
+
+    connect(ui->btn_help, &QPushButton::clicked, [this]() {
+        if (!helpWidget->isVisible())
+        {
+            helpWidget->show();
+        }
+    });
+
     connect(ui->btn_about, &QPushButton::clicked, [this]() {
         if (!aboutApp->isVisible())
         {
             aboutApp->show();
         }
     });
+
+    controlBlock->getGraph()->stopPaintingGraph();
 }
 
 MainWindow::~MainWindow()
@@ -437,10 +446,15 @@ void MainWindow::buttonClick()
     // SHOW WIDGETS PAGE
     if (btnName == "btn_widgets")
     {
+        controlBlock->getGraph()->startPaintingGraph();
         widgets->stackedWidget->setCurrentWidget(widgets->graphPage);
         widgets->stackedWidget_2->setCurrentWidget(widgets->page_leftbox_graph);
         MainWindow::resetStyle(btn);
         btn->setStyleSheet(MainWindow::selectMenu(btn->styleSheet()));
+    }
+    else
+    {
+        controlBlock->getGraph()->stopPaintingGraph();
     }
 
     // SHOW NEW PAGE
@@ -496,22 +510,24 @@ void MainWindow::setupDeviceInfo()
 {
 }
 
+void MainWindow::initTray()
+{
+    icon = new CAppTrayIcon();
+    connect(icon, &CAppTrayIcon::showApp, this, &MainWindow::show);
+    connect(icon, &CAppTrayIcon::hideApp, this, &MainWindow::close);
+    connect(icon, &CAppTrayIcon::closeApp, this, &QCoreApplication::exit);
+    connect(icon, &CAppTrayIcon::activateTray, this, &MainWindow::sysTrayIconActivated);
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (this->isVisible())
     {
+        controlBlock->getGraph()->stopPaintingGraph();
         event->ignore();
         this->hide();
         icon->showMessage();
-        // QSystemTrayIcon::MessageIcon i = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
-
-        // sysTrayIcon->showMessage("Net4U",
-        //                          (tr("The application is minimized to the tray. To maximize the application window "
-        //                              "click on the application icon in the tray")),
-        //                          i, 2000);
     }
-
-    // emit appClose(event);
 }
 
 void MainWindow::sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -522,6 +538,7 @@ void MainWindow::sysTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
         if (!this->isVisible())
         {
             this->show();
+            controlBlock->getGraph()->startPaintingGraph();
         }
         else
         {
@@ -591,9 +608,26 @@ void MainWindow::changeEvent(QEvent *event)
         // controlBlock = new CMainControlBlock(ui);
         widgets->titleRightInfo->setText((description.toUtf8().constData()));
         controlBlock->setupInterfaceInfo(ui->comboBox_interface->currentIndex());
+
         controlBlock->setupRouteTable();
         aboutApp = new AboutDialog{};
+        helpWidget = new HelpWidget{};
+
+        delete icon;
+        initTray();
         ui->retranslateUi(this);
+    }
+
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        QWindowStateChangeEvent *stateChangeEvent = static_cast<QWindowStateChangeEvent *>(event);
+        if (stateChangeEvent->oldState() & Qt::WindowMinimized)
+        {
+            // Application was minimized
+            qDebug() << "Application minimized";
+            // controlBlock->getGraph()->stopPaintingGraph();
+        }
+        // You can also check for other state changes such as maximized or fullscreen
     }
 
     QMainWindow::changeEvent(event);

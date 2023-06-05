@@ -53,8 +53,11 @@ class CPaintNetworkGraphic : public QWidget
     void drawChart(QChartViewer *viewer);        // Draw chart
     void trackLineLabel(XYChart *c, int mouseX); // Draw track cursor
     void updateControls(QChartViewer *viewer);   // Update other controls as viewport changes
+    void setupComboBox();                        // Set up combobox for active adapter
 
-    void setupComboBox(); // Set up combobox for active adapter
+  public:
+    void stopPaintingGraph();
+    void startPaintingGraph();
 
   private slots:
     void onMouseUsageChanged(QAbstractButton *b); // Pointer/zoom in/zoom out button clicked

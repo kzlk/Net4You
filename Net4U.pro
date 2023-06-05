@@ -3,10 +3,8 @@ QT       += core gui sql network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
-LIBS += -lwbemuuid
-LIBS += -lOleAut32
 
-LIBS += -lole32
+
 LIBS += -lIphlpapi
 LIBS += -lws2_32
 LIBS += -lwlanapi
@@ -19,7 +17,6 @@ LIBS += -lwlanapi
 
 SOURCES += \
     GUI/aboutdialog.cpp \
-    GUI/ctranslateapp.cpp \
     GUI/helpwidget.cpp \
     GUI/speedwidget.cpp \
     Graph/qchartimage.cpp \
@@ -32,14 +29,14 @@ SOURCES += \
     Network/cwirelessnetworkadapter.cpp \
     SystemTray/capptrayicon.cpp \
    main.cpp \
-     GUI/mainwindow.cpp
+     GUI/mainwindow.cpp\
+     Translator/ctranslateapp.cpp
 
 HEADERS += \
      GUI/CustomGrip.h \
      GUI/Settings.h \
      GUI/Widget.h \
      GUI/aboutdialog.h \
-     GUI/ctranslateapp.h \
      GUI/helpwidget.h \
      GUI/mainwindow.h \
      GUI/speedwidget.h \
@@ -51,7 +48,8 @@ HEADERS += \
      Network/croutetable.h \
      Network/cviewcontextmenu.h \
      Network/cwirelessnetworkadapter.h \
-     SystemTray/capptrayicon.h
+     SystemTray/capptrayicon.h \
+     Translator/ctranslateapp.h
 
 FORMS += \
      GUI/aboutdialog.ui \

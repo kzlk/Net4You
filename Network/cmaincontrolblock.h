@@ -57,6 +57,9 @@ class CMainControlBlock : public QObject
     //
     QString speedStr = "%1(%2) - %3/s";
 
+  public:
+    CPaintNetworkGraphic *getGraph() const;
+
   public slots:
     void setupInterfaceInfo(int index);
 };
